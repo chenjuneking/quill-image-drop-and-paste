@@ -15,18 +15,18 @@ npm install quill-image-drop-and-paste --save
 ### ES6
 
 ```javascript
-import Quill from 'quill';
-import QuillImageDropAndPaste from 'quill-image-drop-and-paste';
-import { base64StringToBlob } from 'blob-util';
+import Quill from 'quill'
+import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+import { base64StringToBlob } from 'blob-util'
 
-Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
+Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 
 const quill = new Quill('#editor-container', {
-	imageDropAndPaste: {
+  imageDropAndPaste: {
     // add an custom image handler
     handler: imageHandler
   }
-});
+})
 
 /**
 * Do something to our dropped or pasted image
@@ -34,59 +34,59 @@ const quill = new Quill('#editor-container', {
 * @param.type - image's mime type
 */
 function imageHandler(imageDataUrl, type) {
-	// give a default mime type if the type was null
-	if (!type) type = 'image/png';
+  // give a default mime type if the type was null
+  if (!type) type = 'image/png'
 
-	// base64 to blob
-  var blob = base64StringToBlob(base64URL.replace(/^data:image\/\w+;base64,/, ''), type);
+  // base64 to blob
+  var blob = base64StringToBlob(base64URL.replace(/^data:image\/\w+;base64,/, ''), type)
 
- 	var filename = ['my', 'cool', 'image', '-', Math.floor(Math.random() * 1e12), '-', new Date().getTime(), '.', type.match(/^image\/(\w+)$/i)[1]].join('');
+  var filename = ['my', 'cool', 'image', '-', Math.floor(Math.random() * 1e12), '-', new Date().getTime(), '.', type.match(/^image\/(\w+)$/i)[1]].join('')
 
- 	// generate a form data
- 	var formData = new FormData();
- 	formData.append('filename', filename);
-  formData.append('file', blob);
+  // generate a form data
+  var formData = new FormData()
+  formData.append('filename', filename)
+  formData.append('file', blob)
 
   // upload image to your server
   callUploadAPI(your_upload_url, formData, (err, res) => {
-  	if (err) return;
-  	// success? you should return the uploaded image's url
-  	// then insert into the quill editor
-  	const index = (quill.getSelection() || {}).index || quill.getLength();
-  	if (index) quill.insertEmbed(index, 'image', res.data.image_url, 'user');
-  });
-};
+    if (err) return
+    // success? you should return the uploaded image's url
+    // then insert into the quill editor
+    const index = (quill.getSelection() || {}).index || quill.getLength()
+    if (index) quill.insertEmbed(index, 'image', res.data.image_url, 'user')
+  })
+}
 ```
 
 Additional, you could rewrite the toolbar's insert image button with our image handler.
 
 ```javascript
 quill.getModule('toolbar').addHandler('image', (clicked) => {
-	if (clicked) {
-		let fileInput = this.container.querySelector('input.ql-image[type=file]');
-		if (fileInput == null) {
-			fileInput = document.createElement('input');
-      fileInput.setAttribute('type', 'file');
-      fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
-      fileInput.classList.add('ql-image');
+  if (clicked) {
+    let fileInput = this.container.querySelector('input.ql-image[type=file]')
+    if (fileInput == null) {
+      fileInput = document.createElement('input')
+      fileInput.setAttribute('type', 'file')
+      fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon')
+      fileInput.classList.add('ql-image')
       fileInput.addEventListener('change', (e) => {
-      	var files = e.target.files, file;
+        var files = e.target.files, file
         if (files.length > 0) {
-          file = files[0];
-          var type = file.type;
-          var reader = new FileReader();
+          file = files[0]
+          var type = file.type
+          var reader = new FileReader()
           reader.onload = (e) => {
             // handle the inserted image
-            imageHandler(e.target.result, type);
-            fileInput.value = '';
+            imageHandler(e.target.result, type)
+            fileInput.value = ''
           }
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(file)
         }
       })
-		}
-    fileInput.click();
-	}
-});
+    }
+    fileInput.click()
+  }
+})
 ```
 
 ### Script Tag
