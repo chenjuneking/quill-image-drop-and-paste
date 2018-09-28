@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Quill Image Drop And Paste Example</title>
+  <link rel="stylesheet" type="text/css" href="../node_modules/quill/dist/quill.snow.css">
+  <style type="text/css">
+  	#editor-container {
+  		height: 600px;
+  	}
+  </style>
+</head>
+<body>
+	<dir id="toobar"></dir>
+	<div id="editor-container"></div>
+
+  <script src="../node_modules/quill/dist/quill.min.js"></script>
+  <script src="../quill-image-drop-and-paste.min.js"></script>
+
+  <script>
+  	var toolbarOptions = [['bold', 'italic'], ['link', 'image']];
+
+  	var quill = new Quill('#editor-container', {
+  		modules: {
+  			toolbar: toolbarOptions,
+  			imageDropAndPaste: {
+  				handler: imageHandler
+  			}
+  		},
+		  placeholder: 'Compose an epic...',
+		  readOnly: false,
+	    theme: 'snow'
+  	})
+
+  	function imageHandler(imageDataUrl, type) {
+			console.log(imageDataUrl, type)
+		}
+  </script>
+</body>
+</html>
