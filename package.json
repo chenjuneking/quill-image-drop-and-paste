@@ -1,6 +1,6 @@
 {
   "name": "quill-image-drop-and-paste",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A quill editor module for drop and paste image, with a callback hook before insert image into the editor",
   "main": "index.js",
   "scripts": {
@@ -16,9 +16,6 @@
   ],
   "author": "Jacket Chen <342115615@qq.com>",
   "license": "ISC",
-  "dependencies": {
-    "quill": "^1.2.2"
-  },
   "devDependencies": {
     "babel-cli": "^6.24.0",
     "babel-preset-env": "^1.2.2",

@@ -107,6 +107,12 @@ var quill = new Quill(editor, {
 });
 ```
 
+### Examples
+- [React Demo]: https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/react-demo
+- [Vue Demo]: https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo
+- [Simple Web Demo]: https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/web-demo
+
+
 ### Finally
 
 If you didnot config a image handler, it will insert the image into the quill editor directory after you drop/paste a image.

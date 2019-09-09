@@ -1,4 +1,4 @@
-export class ImageDropAndPaste {
+export default class ImageDropAndPaste {
 
 	constructor(quill, options = {}) {
 		this.quill = quill
@@ -27,37 +27,31 @@ export class ImageDropAndPaste {
 				} else {
 					this.insert.call(this, dataUrl, type)
 				}
-			})
+			}, e)
 		}
 	}
 
 	/* handle image paste event
 	*/
 	handlePaste (e) {
-		console.log(e)
 		if (e.clipboardData && e.clipboardData.items && e.clipboardData.items.length) {
 			this.readFiles(e.clipboardData.items, (dataUrl, type) => {
-				const selection = this.quill.getSelection()
-				if (selection) {
+				if (typeof this.options.handler === 'function') {
+					this.options.handler(dataUrl, type)
 				} else {
-					setTimeout(() => {
-						if (typeof this.options.handler === 'function') {
-							this.options.handler(dataUrl, type)
-						} else {
-							this.insert(dataUrl, type)
-						}
-					}, 0)
+					this.insert(dataUrl, type)
 				}
-			})
+			}, e)
 		}
 	}
 
 	/* read the files
 	*/
-	readFiles (files, callback) {
+	readFiles (files, callback, e) {
 		[].forEach.call(files, file => {
 			var type = file.type
-			if (!file.type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) return
+			if (!type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) return
+			e.preventDefault()
 			const reader = new FileReader()
 			reader.onload = (e) => {
 				callback(e.target.result, type)
