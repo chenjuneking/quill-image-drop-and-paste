@@ -32,9 +32,11 @@ import { base64StringToBlob } from 'blob-util'
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 
 const quill = new Quill('#editor-container', {
-  imageDropAndPaste: {
-    // add an custom image handler
-    handler: imageHandler
+  modules: {
+    imageDropAndPaste: {
+      // add an custom image handler
+      handler: imageHandler
+    }
   }
 })
 
@@ -108,12 +110,14 @@ Copy quill-image-drop-and-paste.min.js into your web root or include from node_m
 ```
 
 ```javascript
-var quill = new Quill(editor, {
-    // ...
-    modules: {
-        // ...
-        imageDrop: true
+var quill = new Quill(editorSelector, {
+  // ...
+  modules: {
+    imageDropAndPaste: {
+      // add an custom image handler
+      handler: imageHandler
     }
+  }
 });
 ```
 
