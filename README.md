@@ -109,11 +109,11 @@ var quill = new Quill(editor, {
 
 ### Examples
 
-[React Demo]: https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/react-demo
+[React Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/react-demo)
 
-[Vue Demo]: https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo
+[Vue Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo)
 
-[Simple Web Demo]: https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/web-demo
+[Simple Web Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/web-demo)
 
 
 ### Finally
