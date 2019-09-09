@@ -5,6 +5,16 @@ This module was forked from [quill-image-drop-module]: https://www.npmjs.com/pac
 The only difference was that we could choose how to handle the image we just dropped or pasted, without inserting a base64 url image into the editor directly. <br>
 For example, a base64 string was too large, if we saved it into the database, it could easilly out of the size of the column, the best practice was to save the image on our server and returned the image's url, and finally we inserted the image with the returned url into the editor. <br>
 
+
+### Examples
+
+[React Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/react-demo)
+
+[Vue Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo)
+
+[Simple Web Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/web-demo)
+
+
 ## Install
 ```bash
 npm install quill-image-drop-and-paste --save
@@ -106,15 +116,6 @@ var quill = new Quill(editor, {
     }
 });
 ```
-
-### Examples
-
-[React Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/react-demo)
-
-[Vue Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo)
-
-[Simple Web Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/web-demo)
-
 
 ### Finally
 
