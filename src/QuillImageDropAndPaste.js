@@ -23,7 +23,7 @@ export default class ImageDropAndPaste {
 			}
 			this.readFiles(e.dataTransfer.files, (dataUrl, type) => {
 				if (typeof this.options.handler === 'function') {
-					this.options.handler(dataUrl, type)
+					this.options.handler.call(this, dataUrl, type)
 				} else {
 					this.insert.call(this, dataUrl, type)
 				}
@@ -37,7 +37,7 @@ export default class ImageDropAndPaste {
 		if (e.clipboardData && e.clipboardData.items && e.clipboardData.items.length) {
 			this.readFiles(e.clipboardData.items, (dataUrl, type) => {
 				if (typeof this.options.handler === 'function') {
-					this.options.handler(dataUrl, type)
+					this.options.handler.call(this, dataUrl, type)
 				} else {
 					this.insert(dataUrl, type)
 				}

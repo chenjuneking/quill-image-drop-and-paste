@@ -31,7 +31,7 @@ import { base64StringToBlob } from 'blob-util'
 
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 
-const quill = new Quill('#editor-container', {
+var quill = new Quill('#editor-container', {
   modules: {
     imageDropAndPaste: {
       // add an custom image handler
@@ -50,7 +50,7 @@ function imageHandler(imageDataUrl, type) {
   if (!type) type = 'image/png'
 
   // base64 to blob
-  var blob = base64StringToBlob(base64URL.replace(/^data:image\/\w+;base64,/, ''), type)
+  var blob = base64StringToBlob(imageDataUrl.replace(/^data:image\/\w+;base64,/, ''), type)
 
   var filename = ['my', 'cool', 'image', '-', Math.floor(Math.random() * 1e12), '-', new Date().getTime(), '.', type.match(/^image\/(\w+)$/i)[1]].join('')
 
@@ -64,7 +64,7 @@ function imageHandler(imageDataUrl, type) {
     if (err) return
     // success? you should return the uploaded image's url
     // then insert into the quill editor
-    const index = (quill.getSelection() || {}).index || quill.getLength()
+    var index = (quill.getSelection() || {}).index || quill.getLength()
     if (index) quill.insertEmbed(index, 'image', res.data.image_url, 'user')
   })
 }
@@ -75,7 +75,7 @@ Additional, you could rewrite the toolbar's insert image button with our image h
 ```javascript
 quill.getModule('toolbar').addHandler('image', (clicked) => {
   if (clicked) {
-    let fileInput = this.container.querySelector('input.ql-image[type=file]')
+    var fileInput = this.container.querySelector('input.ql-image[type=file]')
     if (fileInput == null) {
       fileInput = document.createElement('input')
       fileInput.setAttribute('type', 'file')
