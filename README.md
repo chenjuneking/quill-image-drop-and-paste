@@ -27,7 +27,6 @@ npm install quill-image-drop-and-paste --save
 ```javascript
 import Quill from 'quill'
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
-import { base64StringToBlob } from 'blob-util'
 
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 
@@ -42,22 +41,31 @@ var quill = new Quill('#editor-container', {
 
 /**
 * Do something to our dropped or pasted image
-* @param.imageDataUrl - image's base64 url
-* @param.type - image's mime type
+* @param.imageDataUrl {string} - image's dataURL
+* @param.type {string} - image's mime type
+* @param.imageData {object} - provided more functions to handle the image
+*   - imageData.toBlob() {function} - convert image to a BLOB Object
+*   - imageData.toFile(filename) {function} - convert image to a File Object
+*   - imageData.minify(options) {function)- minify the image, return a promise
+*      - options.maxWidth {number} - specify the max width of the image, default is 800
+*      - options.maxHeight {number} - specify the max width of the image, default is 800
+*      - options.quality {number} - specify the quality of the image, default is 0.8
 */
-function imageHandler(imageDataUrl, type) {
-  // give a default mime type if the type was null
-  if (!type) type = 'image/png'
+function imageHandler(imageDataUrl, type, imageData) {
 
-  // base64 to blob
-  var blob = base64StringToBlob(imageDataUrl.replace(/^data:image\/\w+;base64,/, ''), type)
-
-  var filename = ['my', 'cool', 'image', '-', Math.floor(Math.random() * 1e12), '-', new Date().getTime(), '.', type.match(/^image\/(\w+)$/i)[1]].join('')
+  var filename = 'my_cool_image.png'
+  var blob = imageData.toBlob()
+  var file = imageData.toFile(filename)
 
   // generate a form data
   var formData = new FormData()
+
+  // append blob data
   formData.append('filename', filename)
   formData.append('file', blob)
+
+  // or just append the file
+  formData.append('file', file)
 
   // upload image to your server
   callUploadAPI(your_upload_url, formData, (err, res) => {
@@ -70,10 +78,28 @@ function imageHandler(imageDataUrl, type) {
 }
 ```
 
+Minify image before upload to the server.
+
+```javascript
+function imageHandler(imageDataUrl, type, imageData) {
+  imageData.minify({
+    maxWidth: 320,
+    maxHeight: 320,
+    quality: 0.7
+  }).then(miniImageData => {
+    var filename = 'my_cool_image.png'
+    var blob = miniImageData.toBlob()
+    var file = miniImageData.toFile(filename)
+    // create a form data, and upload to the server...
+  })
+}
+```
+
 Additional, you could rewrite the toolbar's insert image button with our image handler.
 
 ```javascript
-quill.getModule('toolbar').addHandler('image', (clicked) => {
+var ImageData = QuillImageDropAndPaste.ImageData
+quill.getModule('toolbar').addHandler('image', function(clicked) {
   if (clicked) {
     var fileInput = this.container.querySelector('input.ql-image[type=file]')
     if (fileInput == null) {
@@ -81,7 +107,7 @@ quill.getModule('toolbar').addHandler('image', (clicked) => {
       fileInput.setAttribute('type', 'file')
       fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon')
       fileInput.classList.add('ql-image')
-      fileInput.addEventListener('change', (e) => {
+      fileInput.addEventListener('change', function(e) {
         var files = e.target.files, file
         if (files.length > 0) {
           file = files[0]
@@ -89,7 +115,8 @@ quill.getModule('toolbar').addHandler('image', (clicked) => {
           var reader = new FileReader()
           reader.onload = (e) => {
             // handle the inserted image
-            imageHandler(e.target.result, type)
+            var dataUrl = e.target.result
+            imageHandler(dataUrl, type, new ImageData(dataUrl, type))
             fileInput.value = ''
           }
           reader.readAsDataURL(file)

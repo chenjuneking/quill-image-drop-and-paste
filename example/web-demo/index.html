@@ -7,11 +7,29 @@
   	#editor-container {
   		height: 600px;
   	}
+		#preview, #info {
+			display: none;
+		}
   </style>
 </head>
 <body>
-	<dir id="toobar"></dir>
 	<div id="editor-container"></div>
+
+	<div>
+		<h4>Preview image from BLOB URL:</h4>
+		<div id="preview"></div>
+	</div>
+
+	<hr />
+
+	<div>
+		<h4>Get file infomation from File Object:</h4>
+		<div id="info">
+			<b>name:</b> <span id="file-name"></span> <br />
+			<b>size:</b> <span id="file-size"></span> <br />
+			<b>type:</b> <span id="file-type"></span>
+		</div>
+	</div>
 
   <script src="./quill.min.js"></script>
   <script src="../../quill-image-drop-and-paste.min.js"></script>
@@ -26,14 +44,72 @@
   				handler: imageHandler
   			}
   		},
-		  placeholder: 'Compose an epic...',
+		  placeholder: 'Copy & paste, or drag an image here...',
 		  readOnly: false,
 	    theme: 'snow'
   	})
 
-  	function imageHandler(imageDataUrl, type) {
-			console.log(imageDataUrl, type)
+  	function imageHandler(dataUrl, type, imageData) {
+			imageData.minify({
+				maxWidth: 320,
+				maxHeight: 320,
+				quality: .7
+			}).then((miniImageData) => {
+				var blob = miniImageData.toBlob()
+				var file = miniImageData.toFile('my_cool_image.png')
+				
+				console.log(`type: ${type}`)
+				console.log(`dataUrl: ${dataUrl}`)
+				console.log(`blob: ${blob}`)
+				console.log(`file: ${file}`)
+				
+				// display preview image from blob url
+				var blobUrl = URL.createObjectURL(blob)
+				var preivew = document.getElementById('preview')
+				var previewImage = document.createElement('img')
+				previewImage.src = blobUrl
+				previewImage.onload = function() {
+					preview.appendChild(previewImage)
+					preview.style.display = 'block'
+				}
+
+				// display file infomation from file object
+				var info = document.getElementById('info')
+				document.getElementById('file-name').textContent = file.name
+				document.getElementById('file-size').textContent = file.size
+				document.getElementById('file-type').textContent = file.type
+				info.style.display = 'block'
+			})
 		}
+
+		var ImageData = QuillImageDropAndPaste.ImageData
+		quill.getModule('toolbar').addHandler('image', function(clicked) {
+			if (clicked) {
+				var fileInput = this.container.querySelector('input.ql-image[type=file]')
+				if (fileInput == null) {
+					fileInput = document.createElement('input')
+					fileInput.setAttribute('type', 'file')
+					fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon')
+					fileInput.classList.add('ql-image')
+					fileInput.addEventListener('change', function(e) {
+						var files = e.target.files, file
+						if (files.length > 0) {
+							file = files[0]
+							var type = file.type
+							var reader = new FileReader()
+							reader.onload = (e) => {
+								// handle the inserted image
+								var dataUrl = e.target.result
+								imageHandler(dataUrl, type, new ImageData(dataUrl, type))
+								fileInput.value = ''
+							}
+							reader.readAsDataURL(file)
+						}
+					})
+				}
+				fileInput.click()
+			}
+		})
   </script>
 </body>
 </html>
