@@ -1,9 +1,7 @@
 # QuillImageDropAndPaste
 > A quill editor module for drop and paste image, with a callback hook before inserting image into the editor.
 
-This module was forked from [quill-image-drop-module]: https://www.npmjs.com/package/quill-image-drop-module <br>
-The only difference was that we could choose how to handle the image we just dropped or pasted, without inserting a base64 url image into the editor directly. <br>
-For example, a base64 string was too large, if we saved it into the database, it could easilly out of the size of the column, the best practice was to save the image on our server and returned the image's url, and finally we inserted the image with the returned url into the editor. <br>
+This module supported drop and paste image into the [quill](https://quilljs.com/) editor, by default, it would insert a image with a base64 url. Because of a base64 string was too large, if we saved it into the database, it could easilly out of the size of the column, the best practice was to save the image on our server and returned the image's url, and finally we inserted the image with the returned url into the editor. <br>
 
 
 ### Examples
@@ -48,7 +46,7 @@ var quill = new Quill('#editor-container', {
 *   - imageData.toFile(filename) {function} - convert image to a File Object
 *   - imageData.minify(options) {function)- minify the image, return a promise
 *      - options.maxWidth {number} - specify the max width of the image, default is 800
-*      - options.maxHeight {number} - specify the max width of the image, default is 800
+*      - options.maxHeight {number} - specify the max height of the image, default is 800
 *      - options.quality {number} - specify the quality of the image, default is 0.8
 */
 function imageHandler(imageDataUrl, type, imageData) {
@@ -150,39 +148,4 @@ var quill = new Quill(editorSelector, {
 
 ### Finally
 
-If you didnot config a image handler, it will insert the image into the quill editor directory after you drop/paste a image.
-Just like the module [quill-image-drop-module]: https://www.npmjs.com/package/quill-image-drop-module did.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+If you didnot config a image handler, it will insert the image with dataURL into the quill editor directory after your drop/paste.
