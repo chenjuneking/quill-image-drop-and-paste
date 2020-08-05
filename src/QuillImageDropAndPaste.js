@@ -160,7 +160,8 @@ class ImageDropAndPaste {
 	/* insert into the editor
 	*/
 	insert (dataUrl, type) {
-		const index = (this.quill.getSelection() || {}).index || this.quill.getLength()
+		let index = (this.quill.getSelection() || {}).index;
+		if (index < 0) index = this.quill.getLength();
 		this.quill.insertEmbed(index, 'image', dataUrl, 'user')
 	}
 
