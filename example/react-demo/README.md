@@ -1,10 +1,10 @@
 ## How to use?
 
-In the project directory, you can the demo as follow:
+In the project directory, you can run the demo as follow:
 
 ```bash
 # install the dependencies
-$ yarn install 
+$ npm install 
 
 # run the app
 $ npm start
