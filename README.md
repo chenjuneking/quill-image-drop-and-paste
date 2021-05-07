@@ -71,7 +71,7 @@ function imageHandler(imageDataUrl, type, imageData) {
     // success? you should return the uploaded image's url
     // then insert into the quill editor
     let index = (quill.getSelection() || {}).index;
-    if (index < 0) index = quill.getLength();
+    if (index === undefined || index < 0) index = quill.getLength();
     quill.insertEmbed(index, 'image', res.data.image_url, 'user')
   })
 }

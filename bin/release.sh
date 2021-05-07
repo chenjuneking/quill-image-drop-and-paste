@@ -18,7 +18,6 @@ rm -rf $dir/example/vue-demo/node_modules/quill-image-drop-and-paste/* \
   && cp $dir/package.json $dir/example/vue-demo/node_modules/quill-image-drop-and-paste/
 # mkdir -p $dir/example/vue-demo/node_modules/quill-image-drop-and-paste && cp $dir/src/QuillImageDropAndPaste.js $dir/example/vue-demo/node_modules/quill-image-drop-and-paste/index.js
 
-
 # copy the template
 cp $dir/src/es5-wrapper.js $dir/quill-image-drop-and-paste.min.js
 # compile to es5

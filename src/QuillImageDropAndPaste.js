@@ -1,3 +1,4 @@
+import utils from './utils'
 class ImageData {
 
 	constructor(dataUrl, type) {
@@ -99,6 +100,7 @@ class ImageDropAndPaste {
 		this.options = options
 		this.handleDrop = this.handleDrop.bind(this)
 		this.handlePaste = this.handlePaste.bind(this)
+		this.insert = this.insert.bind(this)
 		this.quill.root.addEventListener('drop', this.handleDrop, false)
 		this.quill.root.addEventListener('paste', this.handlePaste, false)
 	}
@@ -135,7 +137,7 @@ class ImageDropAndPaste {
 				if (typeof this.options.handler === 'function') {
 					this.options.handler.call(this, dataUrl, type, new ImageData(dataUrl, type))
 				} else {
-					this.insert(dataUrl, type)
+					this.insert(dataUrl, 'image')
 				}
 			}, e)
 		}
@@ -144,27 +146,40 @@ class ImageDropAndPaste {
 	/* read the files
 	*/
 	readFiles (files, callback, e) {
-		[].forEach.call(files, file => {
-			var type = file.type
-			if (!type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) return
+		var that = this
+		Array.prototype.forEach.call(files, file => {
 			e.preventDefault()
-			const reader = new FileReader()
-			reader.onload = (e) => {
-				callback(e.target.result, type)
+			var type = file.type
+			if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
+				const reader = new FileReader()
+				reader.onload = (e) => {
+					callback(e.target.result, type)
+				}
+				const blob = file.getAsFile ? file.getAsFile() : file
+				if (blob instanceof Blob) reader.readAsDataURL(blob)
+			} else if(type.match(/^text\/plain$/i)) {
+				file.getAsString((s) => {
+					utils.urlIsImage(s).then(() => {
+						that.insert(s, 'image')
+					}).catch(() => {
+						that.insert(s, 'text')
+					})
+				})
 			}
-			const blob = file.getAsFile ? file.getAsFile() : file
-			if (blob instanceof Blob) reader.readAsDataURL(blob)
 		})
 	}
 
 	/* insert into the editor
 	*/
-	insert (dataUrl, type) {
-		let index = (this.quill.getSelection() || {}).index;
-		if (index < 0) index = this.quill.getLength();
-		this.quill.insertEmbed(index, 'image', dataUrl, 'user')
+	insert (content, type) {
+		let index = (this.quill.getSelection() || {}).index
+		if (index === undefined || index < 0) index = this.quill.getLength()
+		if (type === 'image') {
+			this.quill.insertEmbed(index, type, content, 'user')
+		} else if (type === 'text') {
+			this.quill.insertText(index, content, 'user')
+		}
 	}
-
 }
 
 ImageDropAndPaste.ImageData = ImageData
