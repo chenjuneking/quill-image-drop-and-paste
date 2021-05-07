@@ -22,7 +22,7 @@
 
 <script>
 import Quill from 'quill'
-import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+import QuillImageDropAndPaste from '../../../../src/QuillImageDropAndPaste'
 
 export default {
   name: 'Editor',

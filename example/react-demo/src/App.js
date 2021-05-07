@@ -1,6 +1,6 @@
 import React from 'react'
 import Quill from 'quill'
-import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+import QuillImageDropAndPaste from './QuillImageDropAndPaste'
 
 import 'quill/dist/quill.snow.css'
 

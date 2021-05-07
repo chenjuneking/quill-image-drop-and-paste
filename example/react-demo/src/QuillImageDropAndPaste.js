@@ -1,0 +1,1 @@
+../../../src/QuillImageDropAndPaste.js

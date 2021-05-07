@@ -1,4 +1,5 @@
 import utils from './utils'
+
 class ImageData {
 
 	constructor(dataUrl, type) {
@@ -146,10 +147,10 @@ class ImageDropAndPaste {
 	/* read the files
 	*/
 	readFiles (files, callback, e) {
-		var that = this
+		e.preventDefault()
+		const that = this
 		Array.prototype.forEach.call(files, file => {
-			e.preventDefault()
-			var type = file.type
+			const type = file.type
 			if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
 				const reader = new FileReader()
 				reader.onload = (e) => {
@@ -172,7 +173,7 @@ class ImageDropAndPaste {
 	/* insert into the editor
 	*/
 	insert (content, type) {
-		let index = (this.quill.getSelection() || {}).index
+		let index = (this.quill.getSelection(true) || {}).index
 		if (index === undefined || index < 0) index = this.quill.getLength()
 		if (type === 'image') {
 			this.quill.insertEmbed(index, type, content, 'user')
@@ -183,5 +184,8 @@ class ImageDropAndPaste {
 }
 
 ImageDropAndPaste.ImageData = ImageData
+
+window.QuillImageDropAndPaste = ImageDropAndPaste
+window.Quill.register('modules/imageDropAndPaste',ImageDropAndPaste)
 
 export default ImageDropAndPaste
