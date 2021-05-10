@@ -186,6 +186,8 @@ class ImageDropAndPaste {
 ImageDropAndPaste.ImageData = ImageData
 
 window.QuillImageDropAndPaste = ImageDropAndPaste
-window.Quill.register('modules/imageDropAndPaste',ImageDropAndPaste)
+if ('Quill' in window) {
+	window.Quill.register('modules/imageDropAndPaste', ImageDropAndPaste)
+}
 
 export default ImageDropAndPaste
