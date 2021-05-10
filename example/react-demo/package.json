@@ -6,12 +6,12 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
-    "quill": "^1.3.6"
+    "quill": "^1.3.6",
+    "quill-image-drop-and-paste": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "link": "ln -s ../../../src/QuillImageDropAndPaste.js src/QuillImageDropAndPaste.js"
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
