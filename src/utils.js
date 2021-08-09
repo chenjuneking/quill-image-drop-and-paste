@@ -43,4 +43,15 @@ export default {
       return false
     }
   },
+  /* check the giving string is a html text
+  */
+  isHtmlText (clipboardDataItems) {
+    let isHtml = false
+    Array.prototype.forEach.call(clipboardDataItems, (item) => {
+      if (item.type.match(/^text\/html$/i)) {
+        isHtml = true
+      }
+    })
+    return isHtml
+  },
 }

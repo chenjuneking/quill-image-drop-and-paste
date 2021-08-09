@@ -133,6 +133,7 @@ class ImageDropAndPaste {
 	*/
 	handlePaste (e) {
 		if (e.clipboardData && e.clipboardData.items && e.clipboardData.items.length) {
+			if (utils.isHtmlText(e.clipboardData.items)) return
 			this.readFiles(e.clipboardData.items, (dataUrl, type) => {
 				type = type || 'image/png'
 				if (typeof this.options.handler === 'function') {

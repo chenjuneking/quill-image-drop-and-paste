@@ -9,9 +9,8 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
-    "vue": "^2.6.10",
     "quill": "^1.3.7",
-    "quill-image-drop-and-paste": "^1.2.0"
+    "vue": "^2.6.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.11.0",

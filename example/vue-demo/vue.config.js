@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   devServer: {
     overlay: {
@@ -5,5 +7,12 @@ module.exports = {
       errors: false
     },
   },
-  lintOnSave: false
+  lintOnSave: false,
+  configureWebpack: {
+    resolve: {
+      alias: {
+        'quill-image-drop-and-paste': path.join(__dirname, '../../src/QuillImageDropAndPaste.js'),
+      }
+    }
+  },
 }
