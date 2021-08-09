@@ -8,12 +8,8 @@ simpleWebRoot=example/web-demo
 file=QuillImageDropAndPaste.js
 
 
-if [ -d "$reactDemoRoot/node_modules" ]; then
+if [ -d "$reactDemoRoot/node_modules/quill-image-drop-and-paste" ]; then
   cp src/$file $reactDemoRoot/node_modules/quill-image-drop-and-paste/src/$file
-fi
-
-if [ -d "$vueDemoRoot/node_modules" ]; then
-  cp src/$file $vueDemoRoot/node_modules/quill-image-drop-and-paste/src/$file
 fi
 
 # compile & uglify
