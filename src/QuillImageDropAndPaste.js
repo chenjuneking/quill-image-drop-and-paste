@@ -178,6 +178,7 @@ class ImageDropAndPaste {
 		if (index === undefined || index < 0) index = this.quill.getLength()
 		if (type === 'image') {
 			this.quill.insertEmbed(index, type, content, 'user')
+			this.quill.setSelection(index + 1)
 		} else if (type === 'text') {
 			this.quill.insertText(index, content, 'user')
 		}
