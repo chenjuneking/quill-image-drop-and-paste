@@ -2,10 +2,20 @@
   "name": "quill-image-drop-and-paste",
   "version": "1.2.4",
   "description": "A quill editor module for drop and paste image, with a callback hook before insert image into the editor",
-  "main": "src/QuillImageDropAndPaste.js",
-  "files": ["src", "package.json", "quill-image-drop-and-paste.min.js"],
+  "main": "dist/quill-image-drop-and-paste.js",
+  "module": "dist/quill-image-drop-and-paste.esm.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "build": "rm -rf dist && rollup -c rollup.config.js",
     "release": "sh ./bin/release.sh"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix"
+    ]
   },
   "keywords": [
     "quill",
@@ -18,11 +28,21 @@
   "author": "Jacket Chen <342115615@qq.com>",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/preset-env": "^7.14.1",
-    "babelify": "^10.0.0",
-    "browserify": "^17.0.0",
-    "uglify-js": "^2.8.13"
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/quill": "^2.0.9",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2",
+    "rollup": "^2.56.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript": "^1.0.1",
+    "typescript": "^4.3.5"
   },
   "repository": {
     "type": "git",
