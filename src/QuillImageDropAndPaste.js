@@ -181,6 +181,7 @@ class ImageDropAndPaste {
 			this.quill.setSelection(index + 1)
 		} else if (type === 'text') {
 			this.quill.insertText(index, content, 'user')
+			this.quill.setSelection(index + content.length)
 		}
 	}
 }
