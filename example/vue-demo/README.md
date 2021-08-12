@@ -4,10 +4,10 @@ In the project directory, you can run the demo as follow:
 
 ```bash
 # install the dependencies
-$ npm install
+$ yarn install
 
 # run the app
-$ npm start
+$ yarn start
 ```
 
 and then drap/paste an image into the editor;)

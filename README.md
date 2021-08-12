@@ -10,7 +10,7 @@ This module supported drop and paste image into the [quill](https://quilljs.com/
 
 [Vue Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo)
 
-[Simple Web Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/web-demo)
+[Script Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/script-demo)
 
 
 ## Install
@@ -97,7 +97,7 @@ function imageHandler(imageDataUrl, type, imageData) {
 Additional, you could rewrite the toolbar's insert image button with our image handler.
 
 ```javascript
-var ImageData = QuillImageDropAndPaste.ImageData
+import { ImageData } from 'quill-image-drop-and-paste'
 quill.getModule('toolbar').addHandler('image', function(clicked) {
   if (clicked) {
     var fileInput = this.container.querySelector('input.ql-image[type=file]')
@@ -145,6 +145,10 @@ var quill = new Quill(editorSelector, {
     }
   }
 });
+
+// access ImageData
+// avoid to cover window's ImageData constructor, we should give it another name
+var QuillImageData = QuillImageDropAndPaste.ImageData
 ```
 
 ### Finally

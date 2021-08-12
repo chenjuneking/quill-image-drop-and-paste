@@ -7,8 +7,6 @@ import pkg from './package.json';
 
 const input = path.join(__dirname, './src/index.ts');
 const ts = typescript({
-  // tsconfig: false,
-  // experimentalDecorators: true,
   module: 'es2015',
 });
 const plugins = [ts, resolve(), commonjs()];
@@ -22,11 +20,13 @@ const esm = {
   plugins,
 };
 
-const ssr = {
+const iife = {
   input,
   output: {
-    file: pkg.main,
-    format: 'cjs',
+    file: 'dist/quill-image-drop-and-paste.js',
+    name: 'QuillImageDropAndPaste',
+    exports: 'named',
+    format: 'iife',
   },
   plugins,
 };
@@ -44,4 +44,4 @@ function generateConfig(config, withTerser = true) {
   return [config, minConfig];
 }
 
-export default [...generateConfig(esm), ...generateConfig(ssr)];
+export default [...generateConfig(esm), ...generateConfig(iife)];

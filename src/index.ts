@@ -168,32 +168,67 @@ export default class ImageDropAndPaste implements IImageDropAndPaste {
     callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
     e: ClipboardEvent | DragEvent,
   ): void {
-    e.preventDefault();
-    const that = this;
-    Array.prototype.forEach.call(files, (file: DataTransferItem) => {
-      const type = file.type;
-      if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
-        const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-          if (e.target && e.target.result) {
-            callback(e.target.result, type);
-          }
-        };
-        const blob = file.getAsFile ? file.getAsFile() : file;
-        if (blob instanceof Blob) reader.readAsDataURL(blob);
-      } else if (type.match(/^text\/plain$/i)) {
-        file.getAsString((s) => {
-          utils
-            .urlIsImage(s)
-            .then(() => {
-              that.insert(s, 'image');
-            })
-            .catch(() => {
-              that.insert(s, 'text');
-            });
-        });
+    Array.prototype.forEach.call(files, (file: DataTransferItem | File) => {
+      if (file instanceof DataTransferItem) {
+        this.handleDataTransfer(file, callback, e);
+      } else if (file instanceof File) {
+        this.handleDroppedFile(file, callback, e);
       }
     });
+  }
+
+  /* handle the pasted data
+   */
+  handleDataTransfer(
+    file: DataTransferItem,
+    callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
+    e: ClipboardEvent | DragEvent,
+  ): void {
+    const that = this;
+    const type = file.type;
+    if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
+      e.preventDefault();
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (e.target && e.target.result) {
+          callback(e.target.result, type);
+        }
+      };
+      const blob = file.getAsFile ? file.getAsFile() : file;
+      if (blob instanceof Blob) reader.readAsDataURL(blob);
+    } else if (type.match(/^text\/plain$/i)) {
+      e.preventDefault();
+      file.getAsString((s) => {
+        utils
+          .urlIsImage(s)
+          .then(() => {
+            that.insert(s, 'image');
+          })
+          .catch(() => {
+            that.insert(s, 'text');
+          });
+      });
+    }
+  }
+
+  /* handle the dropped data
+   */
+  handleDroppedFile(
+    file: File,
+    callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
+    e: ClipboardEvent | DragEvent,
+  ): void {
+    const type = file.type;
+    if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
+      e.preventDefault();
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (e.target && e.target.result) {
+          callback(e.target.result, type);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   /* insert into the editor
