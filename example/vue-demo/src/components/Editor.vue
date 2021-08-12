@@ -22,7 +22,9 @@
 
 <script>
 import Quill from 'quill'
-import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+import QuillImageDropAndPaste, { ImageData as QuillImageData } from 'quill-image-drop-and-paste'
+
+console.log(333, QuillImageData)
 
 export default {
   name: 'Editor',
