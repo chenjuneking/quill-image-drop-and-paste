@@ -10,9 +10,22 @@
 		#preview, #info {
 			display: none;
 		}
+		.operation {
+			font-size: 14px;
+		}
   </style>
 </head>
 <body>
+	<div class="operation">
+		<ul>
+			<li>
+				<label>Plain Text</label>
+				<input type="text" value="foo bar" id="text" disabled />
+				<button onclick="copy(this)" data-type="text/plain">Copy as plain text</button>
+				<button onclick="copy(this)" data-type="text/html">Copy as HTML</button>
+			</li>
+		</ul>
+	</div>
 	<div id="editor-container"></div>
 
 	<div>
@@ -32,7 +45,7 @@
 	</div>
 
   <script src="./quill.min.js"></script>
-  <script src="../../dist/quill-image-drop-and-paste.min.js"></script>
+  <script src="../../dist/quill-image-drop-and-paste.js"></script>
 
   <script>
   	var toolbarOptions = [['bold', 'italic'], ['link', 'image']];
@@ -48,6 +61,32 @@
 		  readOnly: false,
 	    theme: 'snow'
   	})
+
+		function copy(button) {
+			const type = button.dataset.type
+			const element = document.getElementById('text')
+			let value = element.value
+			function handler(event) {
+				if (type === 'text/html') {
+					value = '<b><i>' + value + '</i></b>'
+				}
+				event.clipboardData.setData(type, value)
+				event.preventDefault()
+				document.removeEventListener('copy', handler, true)
+			}
+			document.addEventListener('copy', handler, true)
+			try {
+				document.execCommand('copy')
+			} catch(e) {
+				console.log(e)
+			}
+			// element.disabled = false
+			// element.select()
+			// try {
+			// 	document.execCommand('copy')
+			// } catch(e) {}
+			// element.disabled = true
+		}
 
   	function imageHandler(dataUrl, type, imageData) {
 			imageData.minify({

@@ -236,15 +236,17 @@ export default class ImageDropAndPaste implements IImageDropAndPaste {
   insert(content: string, type: string): void {
     let index: number | undefined = (this.quill.getSelection(true) || {}).index;
     if (index === undefined || index < 0) index = this.quill.getLength();
+    let _index: any;
     if (type === 'image') {
-      const _index = index + 1;
+      _index = index + 1;
       this.quill.insertEmbed(index, type, content, 'user');
-      this.quill.setSelection(_index as any);
     } else if (type === 'text') {
-      const _index = index + content.length;
+      _index = index + content.length;
       this.quill.insertText(index, content, 'user');
-      this.quill.setSelection(_index as any);
     }
+    setTimeout(() => {
+      this.quill.setSelection(_index);
+    });
   }
 }
 

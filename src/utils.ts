@@ -72,4 +72,40 @@ export default {
   arrayBufferToBase64Url(arrayBuffer: ArrayBuffer): string {
     return btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
   },
+  /* copy text - make text store in the clipboard
+   */
+  copyText(content: string, target = document.body): boolean {
+    const element = document.createElement('textarea');
+    const previouslyFocusedElement = document.activeElement;
+    element.value = content;
+    // Prevent keyboard from showing on mobile
+    element.setAttribute('readonly', '');
+    element.style.position = 'absolute';
+    element.style.left = '-9999px';
+    element.style.fontSize = '12pt'; // Prevent zooming on iOS
+    const selection = document.getSelection();
+    let originalRange: boolean | Range = false;
+    if (selection && selection.rangeCount > 0) {
+      originalRange = selection.getRangeAt(0);
+    }
+    target.append(element);
+    element.select();
+    // Explicit selection workaround for iOS
+    element.selectionStart = 0;
+    element.selectionEnd = content.length;
+    let isSuccess = false;
+    try {
+      isSuccess = document.execCommand('copy');
+    } catch {}
+    element.remove();
+    if (selection && originalRange) {
+      selection.removeAllRanges();
+      selection.addRange(originalRange);
+    }
+    // Get the focus back on the previously focused element, if any
+    if (previouslyFocusedElement) {
+      (previouslyFocusedElement as HTMLElement).focus();
+    }
+    return isSuccess;
+  },
 };

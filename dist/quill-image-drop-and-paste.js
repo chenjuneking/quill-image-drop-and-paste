@@ -289,16 +289,18 @@ var QuillImageDropAndPaste = (function (exports) {
           let index = (this.quill.getSelection(true) || {}).index;
           if (index === undefined || index < 0)
               index = this.quill.getLength();
+          let _index;
           if (type === 'image') {
-              const _index = index + 1;
+              _index = index + 1;
               this.quill.insertEmbed(index, type, content, 'user');
-              this.quill.setSelection(_index);
           }
           else if (type === 'text') {
-              const _index = index + content.length;
+              _index = index + content.length;
               this.quill.insertText(index, content, 'user');
-              this.quill.setSelection(_index);
           }
+          setTimeout(() => {
+              this.quill.setSelection(_index);
+          });
       }
   }
   ImageDropAndPaste.ImageData = ImageData;
