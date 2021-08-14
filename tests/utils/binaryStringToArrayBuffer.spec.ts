@@ -1,5 +1,6 @@
 import utils from '../../src/utils';
 
+declare const expect: jest.Expect;
 describe('utils#binaryStringToArrayBuffer(binary: string)', () => {
   test('should return array buffer', async () => {
     const base64Str = 'AAAAAAAAAAA=';

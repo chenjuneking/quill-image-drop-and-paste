@@ -1,6 +1,7 @@
 import utils from '../../src/utils';
 import { IMAGE_DATA_URL } from '../../constants';
 
+declare const expect: jest.Expect;
 describe('utils#resolveDataUrl(dataUrl: string | ArrayBuffer)', () => {
   test('should return base64 string', async () => {
     const result1 = utils.resolveDataUrl(IMAGE_DATA_URL);

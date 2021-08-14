@@ -2,7 +2,14 @@ module.exports = {
   moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
   testEnvironment: 'jsdom',
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.{ts,js}', '!**/node_modules/**', '!**/dist/**', '!**/coverage/**', '!**/example/**'],
+  collectCoverageFrom: [
+    'src/**/*.{ts,js}',
+    '!**/node_modules/**',
+    '!**/dist/**',
+    '!**/coverage/**',
+    '!**/example/**',
+    '!**/cypress/**',
+  ],
   transform: {
     '\\.ts$': 'ts-jest',
   },
@@ -15,6 +22,6 @@ module.exports = {
     },
   },
   coverageReporters: ['text', 'text-summary'],
-  testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.ts$',
+  testMatch: ['**/tests/**/*.spec.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/coverage/', '/example/', '/fixtures/'],
 };

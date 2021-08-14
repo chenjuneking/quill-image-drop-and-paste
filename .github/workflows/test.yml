@@ -1,0 +1,31 @@
+
+name: Run Test Cases
+on:
+  push:
+    branches: [ webview_integration ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [14]
+    steps:
+      - name: Install node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Check out the repository
+        uses: actions/checkout@v2
+      - name: Install node modules
+        run: |
+          npm i -g yarn
+          yarn install
+      - name: Run unit tests
+        run: yarn test
+      - name: Ren E2E tests
+        run: yarn e2e

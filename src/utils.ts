@@ -37,7 +37,7 @@ export default {
   },
   /* check the giving string is a html text
    */
-  isHtmlText(clipboardDataItems: DataTransferItemList): boolean {
+  isRichText(clipboardDataItems: DataTransferItemList): boolean {
     let isHtml = false;
     Array.prototype.forEach.call(clipboardDataItems, (item) => {
       if (item.type.match(/^text\/html$/i)) {
@@ -107,5 +107,10 @@ export default {
       (previouslyFocusedElement as HTMLElement).focus();
     }
     return isSuccess;
+  },
+  /* check the type of specify target
+   */
+  isType(target: any, type: string): boolean {
+    return Object.prototype.toString.call(target) === `[object ${type}]`;
   },
 };

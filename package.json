@@ -10,8 +10,7 @@
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "e2e": "testcafe chrome e2e/**/*.test.ts",
-    "e2e:watch": "testcafe chrome --live e2e/**/*.test.ts",
+    "e2e": "cypress run",
     "build": "rm -rf dist && rollup -c rollup.config.js && sh bin/post-build.sh"
   },
   "lint-staged": {
@@ -37,8 +36,12 @@
     "@types/quill": "^2.0.9",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
     "@typescript-eslint/parser": "^4.29.1",
+    "clipboardy": "^2.3.0",
+    "cypress": "^8.2.0",
+    "cypress-real-events": "^1.5.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-prettier": "^3.4.0",
     "husky": "^7.0.1",
     "jest": "^27.0.6",
@@ -48,7 +51,6 @@
     "rollup": "^2.56.2",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript": "^1.0.1",
-    "testcafe": "1.7.0",
     "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   },

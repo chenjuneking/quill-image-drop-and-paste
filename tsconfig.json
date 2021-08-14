@@ -18,9 +18,12 @@
       "dom.iterable",
       "scripthost"
     ],
+    "types": ["cypress", "cypress-real-events", "jest"]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "tests",
+    "cypress"
   ],
   "exclude": [
     "node_modules",

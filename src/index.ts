@@ -145,7 +145,7 @@ export default class ImageDropAndPaste implements IImageDropAndPaste {
    */
   handlePaste(e: ClipboardEvent): void {
     if (e.clipboardData && e.clipboardData.items && e.clipboardData.items.length) {
-      if (utils.isHtmlText(e.clipboardData.items)) return;
+      if (utils.isRichText(e.clipboardData.items)) return;
       this.readFiles(
         e.clipboardData.items,
         (dataUrl: string | ArrayBuffer, type?: string) => {
@@ -169,8 +169,8 @@ export default class ImageDropAndPaste implements IImageDropAndPaste {
     e: ClipboardEvent | DragEvent,
   ): void {
     Array.prototype.forEach.call(files, (file: DataTransferItem | File) => {
-      if (file instanceof DataTransferItem) {
-        this.handleDataTransfer(file, callback, e);
+      if (utils.isType(file, 'DataTransferItem')) {
+        this.handleDataTransfer(file as DataTransferItem, callback, e);
       } else if (file instanceof File) {
         this.handleDroppedFile(file, callback, e);
       }

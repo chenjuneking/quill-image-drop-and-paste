@@ -1,6 +1,7 @@
 import utils from '../../src/utils';
 import { IMAGE_DATA_URL } from '../../constants';
 
+declare const expect: jest.Expect;
 describe('utils#validURL(str: string)', () => {
   test('empty url', async () => {
     const result = utils.validURL('');

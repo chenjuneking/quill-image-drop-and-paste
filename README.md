@@ -129,7 +129,7 @@ quill.getModule('toolbar').addHandler('image', function(clicked) {
 
 ### Script Tag
 
-Copy quill-image-drop-and-paste.min.js into your web root or include from node_modules
+Copy `dist/quill-image-drop-and-paste.min.js` into your web root or include from node_modules
 
 ```html
 <script src="/node_modules/quill-image-drop-and-paste/quill-image-drop-and-paste.min.js"></script>

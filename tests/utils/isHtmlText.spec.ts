@@ -1,11 +1,12 @@
 import utils from '../../src/utils';
 
-describe('utils#isHtmlText(clipboardDataItems: DataTransferItemList)', () => {
+declare const expect: jest.Expect;
+describe('utils#isRichText(clipboardDataItems: DataTransferItemList)', () => {
   test('test with plain text', async () => {
     const items = new Array(3).fill('').map(() => ({
       type: 'text/pain',
     })) as any;
-    const result = utils.isHtmlText(items);
+    const result = utils.isRichText(items);
     expect(result).toBe(false);
   });
 
@@ -13,7 +14,7 @@ describe('utils#isHtmlText(clipboardDataItems: DataTransferItemList)', () => {
     const items = new Array(3).fill('').map(() => ({
       type: 'text/html',
     })) as any;
-    const result = utils.isHtmlText(items);
+    const result = utils.isRichText(items);
     expect(result).toBe(true);
   });
 });

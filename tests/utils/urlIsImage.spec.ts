@@ -1,5 +1,6 @@
 import utils from '../../src/utils';
 
+declare const expect: jest.Expect;
 async function exec(url: string, expected: boolean, abortTimeout?: number) {
   let result: boolean;
   try {
