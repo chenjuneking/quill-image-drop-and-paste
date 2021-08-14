@@ -26,6 +26,6 @@ jobs:
           npm i -g yarn
           yarn install
       - name: Run unit tests
-        run: yarn test
+        run: yarn test --ci --coverage=false
       - name: Ren E2E tests
         run: yarn e2e
