@@ -1,0 +1,27 @@
+name: publish
+
+on:
+  push:
+    tags:
+    - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Check out the repository
+        uses: actions/checkout@v2
+      - name: Install node modules
+        run: |
+          npm i -g yarn
+          yarn install
+      - name: Build
+        run: yarn build
+      - name: Publish to npm
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN_READ_ONLY }}
