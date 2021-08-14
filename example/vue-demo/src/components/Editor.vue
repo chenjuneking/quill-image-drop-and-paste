@@ -1,10 +1,11 @@
 <template>
   <div>
+    <h1>Vue Example</h1>
     <div id="editor-container"></div>
 
     <div>
       <h4>Preview image from BLOB URL:</h4>
-      <img v-if="blobUrl" :src="blobUrl" />
+      <img v-if="blobUrl" :src="blobUrl" alt="preview blob" />
     </div>
 
     <hr />
@@ -80,6 +81,6 @@ export default {
   @import '../../node_modules/quill/dist/quill.snow.css';
 
   #editor-container {
-    height: 450px;
+    height: 320px;
   }
 </style>

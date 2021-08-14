@@ -1,11 +1,12 @@
 {
   "name": "quill-image-drop-and-paste",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "A quill editor module for drop and paste image, with a callback hook before insert image into the editor",
   "module": "dist/quill-image-drop-and-paste.esm.js",
   "files": [
     "dist"
   ],
+  "types": "dist/index.d.ts",
   "scripts": {
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "test": "jest",
@@ -50,7 +51,7 @@
     "quill": "^1.3.7",
     "rollup": "^2.56.2",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript": "^1.0.1",
+    "rollup-plugin-typescript2": "^0.30.0",
     "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   },

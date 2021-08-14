@@ -58,27 +58,28 @@ export default class App extends React.Component {
 
     return (
       <div className="App">
-        <div id="editor-container" style={{ height: '480px' }}></div>
+        <h1>React Example</h1>
+        <div id="editor-container" style={{ height: '320px' }}></div>
         
         <div>
           <h4>Preview image from BLOB URL:</h4>
           { image.blob &&
-            <img src={URL.createObjectURL(image.blob)} />
+            <img src={URL.createObjectURL(image.blob)} alt="preview blob" />
           }
         </div>
         
         <hr />
         
-          <div>
-            <h4>Get file infomation from File Object:</h4>
-            { image.file &&
-              <div>
-                <b>name:</b> <span>{image.file.name}</span> <br />
-                <b>size:</b> <span>{image.file.size}</span> <br />
-                <b>type:</b> <span>{image.file.type}</span>
-              </div>
-            }
-          </div>
+        <div>
+          <h4>Get file infomation from File Object:</h4>
+          { image.file &&
+            <div>
+              <b>name:</b> <span>{image.file.name}</span> <br />
+              <b>size:</b> <span>{image.file.size}</span> <br />
+              <b>type:</b> <span>{image.file.type}</span>
+            </div>
+          }
+        </div>
       </div>
     )
   }

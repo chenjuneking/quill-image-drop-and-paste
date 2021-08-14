@@ -38,7 +38,7 @@ var utils = {
     },
     /* check the giving string is a html text
      */
-    isHtmlText(clipboardDataItems) {
+    isRichText(clipboardDataItems) {
         let isHtml = false;
         Array.prototype.forEach.call(clipboardDataItems, (item) => {
             if (item.type.match(/^text\/html$/i)) {
@@ -119,8 +119,21 @@ var utils = {
     },
 };
 
-class ImageData {
+class QuillImageData {
     constructor(dataUrl, type) {
+        this.dataUrl = dataUrl;
+        this.type = type;
+    }
+}
+class QuillImageDropAndPaste {
+    constructor(quill, option) {
+        this.quill = quill;
+        this.option = option;
+    }
+}
+class ImageData extends QuillImageData {
+    constructor(dataUrl, type) {
+        super(dataUrl, type);
         this.dataUrl = dataUrl;
         this.type = type;
     }
@@ -214,8 +227,9 @@ class ImageData {
         }
     }
 }
-class ImageDropAndPaste {
+class ImageDropAndPaste extends QuillImageDropAndPaste {
     constructor(quill, option) {
+        super(quill, option);
         this.quill = quill;
         this.option = option;
         this.handleDrop = this.handleDrop.bind(this);
@@ -251,7 +265,7 @@ class ImageDropAndPaste {
      */
     handlePaste(e) {
         if (e.clipboardData && e.clipboardData.items && e.clipboardData.items.length) {
-            if (utils.isHtmlText(e.clipboardData.items))
+            if (utils.isRichText(e.clipboardData.items))
                 return;
             this.readFiles(e.clipboardData.items, (dataUrl, type) => {
                 type = type || 'image/png';
@@ -268,7 +282,6 @@ class ImageDropAndPaste {
      */
     readFiles(files, callback, e) {
         Array.prototype.forEach.call(files, (file) => {
-            // if (file instanceof DataTransferItem) {
             if (utils.isType(file, 'DataTransferItem')) {
                 this.handleDataTransfer(file, callback, e);
             }

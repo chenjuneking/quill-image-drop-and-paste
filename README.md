@@ -10,6 +10,8 @@ This module supported drop and paste image into the [quill](https://quilljs.com/
 
 [Vue Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo)
 
+[Angular Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/angular-demo)
+
 [Script Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/script-demo)
 
 

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "commonjs",
+    "module": "esnext",
     "strict": true,
     "importHelpers": true,
     "moduleResolution": "node",
@@ -12,6 +12,7 @@
     "noImplicitThis": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "outDir": "./dist",
     "lib": [
       "esnext",
       "dom",

@@ -1,12 +1,57 @@
 import utils from './utils';
-import { IImageData, IImageDataMinifyOption, IImageDropAndPaste, IImageDropAndPasteOption } from './index.types';
+import { IImageDataMinifyOption } from './index.d';
 import Quill from 'quill';
 
-export class ImageData implements IImageData {
+interface IImageDropAndPasteOption {
+  handler?: (dataUrl: string | ArrayBuffer, type?: string, imageData?: ImageData) => void;
+}
+
+abstract class QuillImageData {
+  public dataUrl;
+  public type;
+  public constructor(dataUrl, type) {
+    this.dataUrl = dataUrl;
+    this.type = type;
+  }
+  public abstract minify(option: IImageDataMinifyOption);
+  public abstract toFile(filename: string);
+  public abstract toBlob();
+}
+
+abstract class QuillImageDropAndPaste {
+  static ImageData;
+  public quill;
+  public option: IImageDropAndPasteOption;
+  public constructor(quill: Quill, option: IImageDropAndPasteOption) {
+    this.quill = quill;
+    this.option = option;
+  }
+  protected abstract handleDrop(e: DragEvent);
+  protected abstract handlePaste(e: ClipboardEvent);
+  protected abstract readFiles(
+    files: DataTransferItemList | FileList,
+    callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
+    e: ClipboardEvent | DragEvent,
+  );
+  protected abstract handleDataTransfer(
+    file: DataTransferItem,
+    callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
+    e: ClipboardEvent | DragEvent,
+  );
+  protected abstract handleDroppedFile(
+    file: File,
+    callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
+    e: ClipboardEvent | DragEvent,
+  );
+  protected abstract insert(content: string, type: string);
+}
+
+export class ImageData extends QuillImageData {
   dataUrl: string | ArrayBuffer;
   type: string;
 
   constructor(dataUrl: string | ArrayBuffer, type: string) {
+    super(dataUrl, type);
     this.dataUrl = dataUrl;
     this.type = type;
   }
@@ -77,7 +122,7 @@ export class ImageData implements IImageData {
 
   /* create blob
    */
-  createBlob(parts: ArrayBuffer[], properties: string | { type?: string } | undefined): Blob {
+  private createBlob(parts: ArrayBuffer[], properties: string | { type?: string } | undefined): Blob {
     if (!properties) properties = {};
     if (typeof properties === 'string') properties = { type: properties };
     try {
@@ -99,12 +144,13 @@ export class ImageData implements IImageData {
   }
 }
 
-export default class ImageDropAndPaste implements IImageDropAndPaste {
+export default class ImageDropAndPaste extends QuillImageDropAndPaste {
   static ImageData = ImageData;
   quill: Quill;
   option: IImageDropAndPasteOption;
 
   constructor(quill: Quill, option: IImageDropAndPasteOption) {
+    super(quill, option);
     this.quill = quill;
     this.option = option;
     this.handleDrop = this.handleDrop.bind(this);

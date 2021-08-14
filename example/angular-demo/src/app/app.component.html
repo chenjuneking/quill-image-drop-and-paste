@@ -1,0 +1,25 @@
+<div class="app-container">
+  <h1>{{title}}</h1>
+  <div id="editor-container"></div>
+
+  <div>
+    <h4>Preview image from BLOB URL:</h4>
+    <img *ngIf="image.blobUrl" [src]="image.blobUrl" alt="preview blob" />
+
+    <hr />
+        
+    <div>
+      <h4>Get file infomation from File Object:</h4>
+      <div *ngIf="image.file">
+        <b>name:</b> <span>{{image.file.name}}</span> <br />
+        <b>size:</b> <span>{{image.file.size}}</span> <br />
+        <b>type:</b> <span>{{image.file.type}}</span>
+      </div>
+    </div>
+  </div>
+  
+  <hr />
+  
+</div>
+
+

@@ -1,13 +1,18 @@
 import path from 'path';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from 'rollup-plugin-typescript';
+import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 const input = path.join(__dirname, './src/index.ts');
 const ts = typescript({
-  module: 'es2015',
+  tsconfig: 'tsconfig.json',
+  tsconfigOverride: {
+    rootDir: './src',
+    include: ['src/**/*.ts'],
+    exclude: ['node_modules', 'dist', 'cypress', 'tests'],
+  },
 });
 const plugins = [ts, resolve(), commonjs()];
 
