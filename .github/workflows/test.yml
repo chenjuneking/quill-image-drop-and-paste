@@ -2,9 +2,9 @@
 name: Run Test Cases
 on:
   push:
-    branches: [ webview_integration ]
+    branches: [ master ]
   pull_request:
-    branches: [ dev ]
+    branches: [ master ]
 
 jobs:
   test:
