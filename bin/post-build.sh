@@ -3,6 +3,7 @@
 VUE_EXAMPLE_PACKAGE_DIR=example/vue-demo/node_modules/quill-image-drop-and-paste
 REACT_EXAMPLE_PACKAGE_DIR=example/react-demo/node_modules/quill-image-drop-and-paste
 ANGULAR_EXAMPLE_PACKAGE_DIR=example/angular-demo/node_modules/quill-image-drop-and-paste
+NEXTJS_EXAMPLE_PACKAGE_DIR=example/nextjs-demo/node_modules/quill-image-drop-and-paste
 SCRIPT_EXAMPLE_DIR=example/script-demo
 DIST=dist
 
@@ -25,3 +26,9 @@ if [ ! -d "$ANGULAR_EXAMPLE_PACKAGE_DIR/dist" ]; then
   mkdir -p $ANGULAR_EXAMPLE_PACKAGE_DIR/dist
 fi
 cp package.json $ANGULAR_EXAMPLE_PACKAGE_DIR && cp -R $DIST/* $ANGULAR_EXAMPLE_PACKAGE_DIR/dist
+
+# copy bundles to nextjs demo
+if [ ! -d "$NEXTJS_EXAMPLE_PACKAGE_DIR/dist" ]; then
+  mkdir -p $NEXTJS_EXAMPLE_PACKAGE_DIR/dist
+fi
+cp package.json $NEXTJS_EXAMPLE_PACKAGE_DIR && cp -R $DIST/* $NEXTJS_EXAMPLE_PACKAGE_DIR/dist

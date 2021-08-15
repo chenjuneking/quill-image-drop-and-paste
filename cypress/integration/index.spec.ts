@@ -28,7 +28,7 @@ describe('Test example/script-demo/index.html', () => {
   });
 
   it('paste a normal url, editor should display the normal url', () => {
-    const value = 'https://raw.githubusercontent.com/chenjuneking/quill-image-drop-and-paste/feature-e2e/lenna.png';
+    const value = 'https://raw.githubusercontent.com/chenjuneking/quill-image-drop-and-paste/master/lenna.png';
     cy.get(EDITOR).focus();
     // @ts-ignore
     cy.get(EDITOR).paste({

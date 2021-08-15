@@ -128,12 +128,6 @@ var QuillImageDropAndPaste = (function (exports) {
           this.type = type;
       }
   }
-  class QuillImageDropAndPaste {
-      constructor(quill, option) {
-          this.quill = quill;
-          this.option = option;
-      }
-  }
   class ImageData extends QuillImageData {
       constructor(dataUrl, type) {
           super(dataUrl, type);
@@ -228,6 +222,13 @@ var QuillImageDropAndPaste = (function (exports) {
                   builder.append(parts[i]);
               return builder.getBlob(properties.type);
           }
+      }
+  }
+
+  class QuillImageDropAndPaste {
+      constructor(quill, option) {
+          this.quill = quill;
+          this.option = option;
       }
   }
   class ImageDropAndPaste extends QuillImageDropAndPaste {

@@ -1,3 +1,5 @@
+'use strict';
+
 var utils = {
     /* detect the giving url is a image
      */
@@ -363,4 +365,4 @@ if ('Quill' in window) {
     window.Quill.register('modules/imageDropAndPaste', ImageDropAndPaste);
 }
 
-export { ImageData, ImageDropAndPaste as default };
+module.exports = ImageDropAndPaste;

@@ -5,7 +5,6 @@ import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
-const input = path.join(__dirname, './src/index.ts');
 const ts = typescript({
   tsconfig: 'tsconfig.json',
   tsconfigOverride: {
@@ -17,7 +16,7 @@ const ts = typescript({
 const plugins = [ts, resolve(), commonjs()];
 
 const esm = {
-  input,
+  input: path.join(__dirname, './src/index.esm.ts'),
   output: {
     file: pkg.module,
     format: 'esm',
@@ -25,8 +24,19 @@ const esm = {
   plugins,
 };
 
+const ssr = {
+  input: path.join(__dirname, './src/index.cjs.ts'),
+  output: {
+    file: pkg.main,
+    format: 'cjs',
+    exports: 'default',
+    // name: 'ImageDropAndPaste',
+  },
+  plugins,
+};
+
 const iife = {
-  input,
+  input: path.join(__dirname, './src/index.esm.ts'),
   output: {
     file: 'dist/quill-image-drop-and-paste.js',
     name: 'QuillImageDropAndPaste',
@@ -49,4 +59,4 @@ function generateConfig(config, withTerser = true) {
   return [config, minConfig];
 }
 
-export default [...generateConfig(esm), ...generateConfig(iife)];
+export default [...generateConfig(esm), ...generateConfig(ssr), ...generateConfig(iife)];
