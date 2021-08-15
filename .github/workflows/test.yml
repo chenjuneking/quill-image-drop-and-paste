@@ -27,5 +27,5 @@ jobs:
           yarn install
       - name: Run unit tests
         run: yarn test --ci --coverage=false
-      - name: Ren E2E tests
+      - name: Run E2E tests
         run: yarn e2e
