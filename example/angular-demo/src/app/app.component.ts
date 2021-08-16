@@ -1,9 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import Quill from 'quill';
 import QuillImageDropAndPaste, { ImageData as QuillImageData } from 'quill-image-drop-and-paste';
-
-let nextId = 1;
 
 interface IImageMeta {
   type: string;
@@ -17,8 +15,7 @@ interface IImageMeta {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
-  private id = nextId++;
+export class AppComponent implements OnInit {
   title = 'Angular Example';
   image: IImageMeta = {
     type: '',
@@ -57,7 +54,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(`Spy #${this.id} onInit`);
     Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
     new Quill('#editor-container', {
       modules: {
@@ -73,9 +69,5 @@ export class AppComponent implements OnInit, OnDestroy {
       readOnly: false,
       theme: 'snow',
     });
-  }
-
-  ngOnDestroy() {
-    console.log(`Spy #${this.id} onDestroy`);
   }
 }

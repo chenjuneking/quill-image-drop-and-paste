@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import 'quill/dist/quill.snow.css'
 import styles from '../styles/index.module.css'
 
@@ -19,18 +20,37 @@ export default function QuillEditor() {
   });
 
   const imageHandler = (dataUrl, type, imageData) => {
+    const originalFile = imageData.toFile('my_cool_image.png');
+
     imageData.minify({
       maxWidth: 320,
       maxHeight: 320,
       quality: .7
     }).then((miniImageData) => {
-      const blob = miniImageData.toBlob()
-      const file = miniImageData.toFile('my_cool_image.png')
+      const blob = miniImageData.toBlob();
+      const file = miniImageData.toFile('my_cool_image.min.png')
 
       console.log(`type: ${type}`)
       console.log(`dataUrl: ${dataUrl}`)
-      console.log(`blob: ${blob}`)
-      console.log(`file: ${file}`)
+      console.log(
+        `compressed file size: ${file.size * 1e-3} KB, original file size: ${originalFile.size * 1e-3} KB`
+      )
+
+      const formData = new FormData();
+      // upload the image which has less size
+      formData.append('file', file.size < originalFile.size ? file : originalFile);
+      axios.post('/api/upload', formData, {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+        onUploadProgress: (event) => {
+          console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
+        },
+      }).then((res) => {
+        console.log('upload response: ', res.data);
+      }).catch((err) => {
+        console.error('upload error: ', err);
+      });
 
       setImage({ type, dataUrl, blob, file })
     })

@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/public/uploads/*
 /.pnp
 .pnp.js
 
@@ -32,3 +33,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+!.gitkeep
+
+
