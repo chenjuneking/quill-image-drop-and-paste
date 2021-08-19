@@ -12,7 +12,7 @@ This module supported drop and paste image into the [quill](https://quilljs.com/
 
 [Angular Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/angular-demo)
 
-[Next.js Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/nextjs-demo)
+[Next.js Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/nextjs-demo) (full example with client and server side image upload implementation)
 
 [Script Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/script-demo)
 
@@ -32,7 +32,7 @@ import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
 
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 
-var quill = new Quill('#editor-container', {
+const quill = new Quill('#editor-container', {
   modules: {
     imageDropAndPaste: {
       // add an custom image handler
@@ -45,25 +45,22 @@ var quill = new Quill('#editor-container', {
 * Do something to our dropped or pasted image
 * @param.imageDataUrl {string} - image's dataURL
 * @param.type {string} - image's mime type
-* @param.imageData {object} - provided more functions to handle the image
+* @param.imageData {ImageData} - provided more functions to handle the image
 *   - imageData.toBlob() {function} - convert image to a BLOB Object
-*   - imageData.toFile(filename) {function} - convert image to a File Object
+*   - imageData.toFile(filename?: string) {function} - convert image to a File Object. filename is optional, it will generate a random name if the original image didn't have a name.
 *   - imageData.minify(options) {function)- minify the image, return a promise
 *      - options.maxWidth {number} - specify the max width of the image, default is 800
 *      - options.maxHeight {number} - specify the max height of the image, default is 800
 *      - options.quality {number} - specify the quality of the image, default is 0.8
 */
 function imageHandler(imageDataUrl, type, imageData) {
-
-  var filename = 'my_cool_image.png'
-  var blob = imageData.toBlob()
-  var file = imageData.toFile(filename)
+  const blob = imageData.toBlob()
+  const file = imageData.toFile()
 
   // generate a form data
-  var formData = new FormData()
+  const formData = new FormData()
 
   // append blob data
-  formData.append('filename', filename)
   formData.append('file', blob)
 
   // or just append the file
@@ -90,9 +87,8 @@ function imageHandler(imageDataUrl, type, imageData) {
     maxHeight: 320,
     quality: 0.7
   }).then(miniImageData => {
-    var filename = 'my_cool_image.png'
-    var blob = miniImageData.toBlob()
-    var file = miniImageData.toFile(filename)
+    const blob = miniImageData.toBlob()
+    const file = miniImageData.toFile()
     // create a form data, and upload to the server...
   })
 }
@@ -104,22 +100,23 @@ Additional, you could rewrite the toolbar's insert image button with our image h
 import { ImageData } from 'quill-image-drop-and-paste'
 quill.getModule('toolbar').addHandler('image', function(clicked) {
   if (clicked) {
-    var fileInput = this.container.querySelector('input.ql-image[type=file]')
+    let fileInput = this.container.querySelector('input.ql-image[type=file]')
     if (fileInput == null) {
       fileInput = document.createElement('input')
       fileInput.setAttribute('type', 'file')
       fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon')
       fileInput.classList.add('ql-image')
       fileInput.addEventListener('change', function(e) {
-        var files = e.target.files, file
+        const files = e.target.files
+        let file
         if (files.length > 0) {
           file = files[0]
-          var type = file.type
-          var reader = new FileReader()
+          const type = file.type
+          const reader = new FileReader()
           reader.onload = (e) => {
             // handle the inserted image
-            var dataUrl = e.target.result
-            imageHandler(dataUrl, type, new ImageData(dataUrl, type))
+            const dataUrl = e.target.result
+            imageHandler(dataUrl, type, new ImageData(dataUrl, type, file.name))
             fileInput.value = ''
           }
           reader.readAsDataURL(file)
@@ -140,7 +137,7 @@ Copy `dist/quill-image-drop-and-paste.min.js` into your web root or include from
 ```
 
 ```javascript
-var quill = new Quill(editorSelector, {
+const quill = new Quill(editorSelector, {
   // ...
   modules: {
     imageDropAndPaste: {
@@ -152,7 +149,7 @@ var quill = new Quill(editorSelector, {
 
 // access ImageData
 // avoid to cover window's ImageData constructor, we should give it another name
-var QuillImageData = QuillImageDropAndPaste.ImageData
+const QuillImageData = QuillImageDropAndPaste.ImageData
 ```
 
 ### Finally

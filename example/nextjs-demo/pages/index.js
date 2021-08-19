@@ -20,7 +20,7 @@ export default function QuillEditor() {
   });
 
   const imageHandler = (dataUrl, type, imageData) => {
-    const originalFile = imageData.toFile('my_cool_image.png');
+    const originalFile = imageData.toFile();
 
     imageData.minify({
       maxWidth: 320,
@@ -28,7 +28,7 @@ export default function QuillEditor() {
       quality: .7
     }).then((miniImageData) => {
       const blob = miniImageData.toBlob();
-      const file = miniImageData.toFile('my_cool_image.min.png')
+      const file = miniImageData.toFile();
 
       console.log(`type: ${type}`)
       console.log(`dataUrl: ${dataUrl}`)
@@ -71,6 +71,36 @@ export default function QuillEditor() {
         theme: 'snow'
       });
       setQuill(quill);
+
+      const ImageData = QuillImageDropAndPaste.ImageData
+      quill.getModule('toolbar').addHandler('image', function(clicked) {
+        if (clicked) {
+          let fileInput = this.container.querySelector('input.ql-image[type=file]')
+          if (fileInput == null) {
+            fileInput = document.createElement('input')
+            fileInput.setAttribute('type', 'file')
+            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon')
+            fileInput.classList.add('ql-image')
+            fileInput.addEventListener('change', function(e) {
+              const files = e.target.files
+              let file
+              if (files.length > 0) {
+                file = files[0]
+                const type = file.type
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                  // handle the inserted image
+                  const dataUrl = e.target.result
+                  imageHandler(dataUrl, type, new ImageData(dataUrl, type, file.name))
+                  fileInput.value = ''
+                }
+                reader.readAsDataURL(file)
+              }
+            })
+          }
+          fileInput.click()
+        }
+      })
     }
   }, [quillRef])
 

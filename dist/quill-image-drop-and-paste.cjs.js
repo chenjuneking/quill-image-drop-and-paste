@@ -1,6 +1,11 @@
 'use strict';
 
 var utils = {
+    /* generate a filename
+     */
+    generateFilename() {
+        return btoa(String(Math.random() * 1e6) + String(+new Date())).replace('=', '');
+    },
     /* detect the giving url is a image
      */
     urlIsImage(url, abortTimeout = 3000) {
@@ -122,16 +127,18 @@ var utils = {
 };
 
 class QuillImageData {
-    constructor(dataUrl, type) {
+    constructor(dataUrl, type, name) {
         this.dataUrl = dataUrl;
         this.type = type;
+        this.name = name || '';
     }
 }
 class ImageData extends QuillImageData {
-    constructor(dataUrl, type) {
-        super(dataUrl, type);
+    constructor(dataUrl, type, name) {
+        super(dataUrl, type, name);
         this.dataUrl = dataUrl;
         this.type = type;
+        this.name = name || `${utils.generateFilename()}.${this.getSuffix()}`;
     }
     /* minify the image
      */
@@ -169,7 +176,7 @@ class ImageData extends QuillImageData {
                     ctx.drawImage(image, 0, 0, image.width, image.height);
                     const canvasType = this.type || 'image/png';
                     const canvasDataUrl = canvas.toDataURL(canvasType, quality);
-                    resolve(new ImageData(canvasDataUrl, canvasType));
+                    resolve(new ImageData(canvasDataUrl, canvasType, this.name));
                 }
                 else {
                     reject({
@@ -183,6 +190,7 @@ class ImageData extends QuillImageData {
     /* convert blob to file
      */
     toFile(filename) {
+        filename = filename || this.name;
         if (!window.File) {
             console.error('[error] QuillImageDropAndPaste: Your browser didnot support File API.');
             return null;
@@ -222,6 +230,11 @@ class ImageData extends QuillImageData {
             return builder.getBlob(properties.type);
         }
     }
+    getSuffix() {
+        const matched = this.type.match(/^image\/(\w+)$/);
+        const suffix = matched ? matched[1] : 'png';
+        return suffix;
+    }
 }
 
 class QuillImageDropAndPaste {
@@ -253,10 +266,9 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
                     selection.setBaseAndExtent(range.startContainer, range.startOffset, range.startContainer, range.startOffset);
                 }
             }
-            this.readFiles(e.dataTransfer.files, (dataUrl, type) => {
-                type = type || 'image/png';
+            this.readFiles(e.dataTransfer.files, (dataUrl, type = 'image/png', name) => {
                 if (typeof this.option.handler === 'function') {
-                    this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type));
+                    this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type, name));
                 }
                 else {
                     this.insert.call(this, utils.resolveDataUrl(dataUrl), type);
@@ -270,8 +282,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
         if (e.clipboardData && e.clipboardData.items && e.clipboardData.items.length) {
             if (utils.isRichText(e.clipboardData.items))
                 return;
-            this.readFiles(e.clipboardData.items, (dataUrl, type) => {
-                type = type || 'image/png';
+            this.readFiles(e.clipboardData.items, (dataUrl, type = 'image/png') => {
                 if (typeof this.option.handler === 'function') {
                     this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type));
                 }
@@ -297,7 +308,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
      */
     handleDataTransfer(file, callback, e) {
         const that = this;
-        const type = file.type;
+        const { type } = file;
         if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
             e.preventDefault();
             const reader = new FileReader();
@@ -327,13 +338,13 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
     /* handle the dropped data
      */
     handleDroppedFile(file, callback, e) {
-        const type = file.type;
+        const { type, name = '' } = file;
         if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
             e.preventDefault();
             const reader = new FileReader();
             reader.onload = (e) => {
                 if (e.target && e.target.result) {
-                    callback(e.target.result, type);
+                    callback(e.target.result, type, name);
                 }
             };
             reader.readAsDataURL(file);

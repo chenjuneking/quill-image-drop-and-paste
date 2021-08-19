@@ -2,11 +2,13 @@ import utils from './utils';
 import { IImageDataMinifyOption } from './index.d';
 
 abstract class QuillImageData {
-  public dataUrl;
-  public type;
-  public constructor(dataUrl, type) {
+  public dataUrl: string | ArrayBuffer;
+  public type: string;
+  public name: string;
+  public constructor(dataUrl: string | ArrayBuffer, type: string, name?: string) {
     this.dataUrl = dataUrl;
     this.type = type;
+    this.name = name || '';
   }
   public abstract minify(option: IImageDataMinifyOption);
   public abstract toFile(filename: string);
@@ -16,11 +18,13 @@ abstract class QuillImageData {
 class ImageData extends QuillImageData {
   dataUrl: string | ArrayBuffer;
   type: string;
+  name: string;
 
-  constructor(dataUrl: string | ArrayBuffer, type: string) {
-    super(dataUrl, type);
+  constructor(dataUrl: string | ArrayBuffer, type: string, name?: string) {
+    super(dataUrl, type, name);
     this.dataUrl = dataUrl;
     this.type = type;
+    this.name = name || `${utils.generateFilename()}.${this.getSuffix()}`;
   }
 
   /* minify the image
@@ -58,7 +62,7 @@ class ImageData extends QuillImageData {
           ctx.drawImage(image, 0, 0, image.width, image.height);
           const canvasType = this.type || 'image/png';
           const canvasDataUrl = canvas.toDataURL(canvasType, quality);
-          resolve(new ImageData(canvasDataUrl, canvasType));
+          resolve(new ImageData(canvasDataUrl, canvasType, this.name));
         } else {
           reject({
             message: '[error] QuillImageDropAndPaste: Fail to minify the image, create canvas context failure.',
@@ -71,7 +75,8 @@ class ImageData extends QuillImageData {
 
   /* convert blob to file
    */
-  public toFile(filename: string): File | null {
+  public toFile(filename?: string): File | null {
+    filename = filename || this.name;
     if (!window.File) {
       console.error('[error] QuillImageDropAndPaste: Your browser didnot support File API.');
       return null;
@@ -108,6 +113,12 @@ class ImageData extends QuillImageData {
       for (let i = 0; i < parts.length; i++) builder.append(parts[i]);
       return builder.getBlob(properties.type) as Blob;
     }
+  }
+
+  private getSuffix(): string {
+    const matched = this.type.match(/^image\/(\w+)$/);
+    const suffix = matched ? matched[1] : 'png';
+    return suffix;
   }
 }
 

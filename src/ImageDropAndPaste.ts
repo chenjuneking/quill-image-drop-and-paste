@@ -64,10 +64,9 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
       }
       this.readFiles(
         e.dataTransfer.files,
-        (dataUrl, type) => {
-          type = type || 'image/png';
+        (dataUrl: string | ArrayBuffer, type = 'image/png', name?: string) => {
           if (typeof this.option.handler === 'function') {
-            this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type));
+            this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type, name));
           } else {
             this.insert.call(this, utils.resolveDataUrl(dataUrl), type);
           }
@@ -84,8 +83,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
       if (utils.isRichText(e.clipboardData.items)) return;
       this.readFiles(
         e.clipboardData.items,
-        (dataUrl: string | ArrayBuffer, type?: string) => {
-          type = type || 'image/png';
+        (dataUrl: string | ArrayBuffer, type = 'image/png') => {
           if (typeof this.option.handler === 'function') {
             this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type));
           } else {
@@ -101,7 +99,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
    */
   readFiles(
     files: DataTransferItemList | FileList,
-    callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
+    callback: (dataUrl: string | ArrayBuffer, type: string, name?: string) => void,
     e: ClipboardEvent | DragEvent,
   ): void {
     Array.prototype.forEach.call(files, (file: DataTransferItem | File) => {
@@ -117,11 +115,11 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
    */
   handleDataTransfer(
     file: DataTransferItem,
-    callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
+    callback: (dataUrl: string | ArrayBuffer, type: string, name?: string) => void,
     e: ClipboardEvent | DragEvent,
   ): void {
     const that = this;
-    const type = file.type;
+    const { type } = file;
     if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
       e.preventDefault();
       const reader = new FileReader();
@@ -151,16 +149,16 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
    */
   handleDroppedFile(
     file: File,
-    callback: (dataUrl: string | ArrayBuffer, type?: string) => void,
+    callback: (dataUrl: string | ArrayBuffer, type: string, name?: string) => void,
     e: ClipboardEvent | DragEvent,
   ): void {
-    const type = file.type;
+    const { type, name = '' } = file;
     if (type.match(/^image\/(gif|jpe?g|a?png|svg|webp|bmp)/i)) {
       e.preventDefault();
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
         if (e.target && e.target.result) {
-          callback(e.target.result, type);
+          callback(e.target.result, type, name);
         }
       };
       reader.readAsDataURL(file);

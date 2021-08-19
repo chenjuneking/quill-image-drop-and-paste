@@ -1,4 +1,9 @@
 export default {
+  /* generate a filename
+   */
+  generateFilename(): string {
+    return btoa(String(Math.random() * 1e6) + String(+new Date())).replace('=', '');
+  },
   /* detect the giving url is a image
    */
   urlIsImage(url: string, abortTimeout = 3000): Promise<boolean> {
