@@ -11,7 +11,7 @@ abstract class QuillImageData {
     this.name = name || '';
   }
   public abstract minify(option: IImageDataMinifyOption);
-  public abstract toFile(filename: string);
+  public abstract toFile(filename?: string);
   public abstract toBlob();
 }
 

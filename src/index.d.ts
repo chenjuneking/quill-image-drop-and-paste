@@ -11,7 +11,7 @@ declare module 'quill-image-drop-and-paste' {
     dataUrl: string | ArrayBuffer;
     type: string;
     minify(option: IImageDataMinifyOption): Promise<ImageData | { message: string }>;
-    toFile(filename: string): File | null;
+    toFile(filename?: string): File | null;
     toBlob(): Blob;
   }
   export default class ImageDropAndPaste {
