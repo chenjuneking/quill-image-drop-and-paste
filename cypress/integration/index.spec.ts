@@ -36,10 +36,13 @@ describe('Test example/script-demo/index.html', () => {
       payload: value,
     });
     cy.get(EDITOR).find('img').should('exist').and('have.attr', 'src', value);
-    cy.window().then((win: any) => {
-      const quill = win.quill;
-      expect(quill).not.to.be.null;
-      expect(quill.getSelection(true).index).to.equal(1);
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(300).then(() => {
+      cy.window().then((win: any) => {
+        const quill = win.quill;
+        expect(quill).not.to.be.null;
+        expect(quill.getSelection(true).index).to.equal(1);
+      });
     });
   });
 
