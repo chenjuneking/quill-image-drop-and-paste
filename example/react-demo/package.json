@@ -9,7 +9,7 @@
     "react-scripts": "^4.0.3"
   },
   "scripts": {
-    "prepare": "cd ../.. && npm run build",
+    "prepare": "cd ../.. && yarn install && yarn build",
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
