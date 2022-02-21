@@ -7,7 +7,7 @@ In the project directory, you can run the demo as follow:
 $ yarn
 
 # run the app
-$ yarn start
+$ yarn serve
 ```
 
 and then drap/paste an image into the editor;)

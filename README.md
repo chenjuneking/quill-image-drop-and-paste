@@ -8,7 +8,9 @@ This module supported drop and paste image into the [quill](https://quilljs.com/
 
 [React Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/react-demo)
 
-[Vue Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo)
+[Vue2 Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue-demo)
+
+[Vue3 Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/vue3-demo)
 
 [Angular Demo](https://github.com/chenjuneking/quill-image-drop-and-paste/tree/master/example/angular-demo)
 
