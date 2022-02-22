@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VUE_EXAMPLE_PACKAGE_DIR=example/vue-demo/node_modules/quill-image-drop-and-paste
+VUE3_EXAMPLE_PACKAGE_DIR=example/vue3-demo/node_modules/quill-image-drop-and-paste
 REACT_EXAMPLE_PACKAGE_DIR=example/react-demo/node_modules/quill-image-drop-and-paste
 ANGULAR_EXAMPLE_PACKAGE_DIR=example/angular-demo/node_modules/quill-image-drop-and-paste
 NEXTJS_EXAMPLE_PACKAGE_DIR=example/nextjs-demo/node_modules/quill-image-drop-and-paste
@@ -14,6 +15,12 @@ if [ ! -d "$VUE_EXAMPLE_PACKAGE_DIR/dist" ]; then
   mkdir -p $VUE_EXAMPLE_PACKAGE_DIR/dist
 fi
 cp package.json $VUE_EXAMPLE_PACKAGE_DIR && cp -R $DIST/* $VUE_EXAMPLE_PACKAGE_DIR/dist
+
+# copy bundles to vue3 demo
+if [ ! -d "$VUE3_EXAMPLE_PACKAGE_DIR/dist" ]; then
+  mkdir -p $VUE3_EXAMPLE_PACKAGE_DIR/dist
+fi
+cp package.json $VUE3_EXAMPLE_PACKAGE_DIR && cp -R $DIST/* $VUE3_EXAMPLE_PACKAGE_DIR/dist
 
 # copy bundles to react demo
 if [ ! -d "$REACT_EXAMPLE_PACKAGE_DIR/dist" ]; then

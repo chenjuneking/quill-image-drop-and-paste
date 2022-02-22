@@ -322,15 +322,20 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
                 reader.readAsDataURL(blob);
         }
         else if (type.match(/^text\/plain$/i)) {
-            e.preventDefault();
             file.getAsString((s) => {
+                // Don't preventDefault here, because there might be clipboard matchers need to be triggered
+                // see https://github.com/chenjuneking/quill-image-drop-and-paste/issues/37
+                const i = this.getIndex();
                 utils
                     .urlIsImage(s)
                     .then(() => {
+                    // If the pasted plain text is an image, delete the pasted text and insert the image
+                    const j = this.getIndex();
+                    this.quill.deleteText(i, j - i, 'user');
                     that.insert(s, 'image');
                 })
                     .catch(() => {
-                    that.insert(s, 'text');
+                    // Otherwise, do nothing
                 });
             });
         }
@@ -353,9 +358,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
     /* insert into the editor
      */
     insert(content, type) {
-        let index = (this.quill.getSelection(true) || {}).index;
-        if (index === undefined || index < 0)
-            index = this.quill.getLength();
+        const index = this.getIndex();
         let _index;
         if (type === 'image') {
             _index = index + 1;
@@ -368,6 +371,12 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
         setTimeout(() => {
             this.quill.setSelection(_index);
         });
+    }
+    getIndex() {
+        let index = (this.quill.getSelection(true) || {}).index;
+        if (index === undefined || index < 0)
+            index = this.quill.getLength();
+        return index;
     }
 }
 ImageDropAndPaste.ImageData = ImageData;

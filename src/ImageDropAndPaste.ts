@@ -1,7 +1,6 @@
 import utils from './utils';
 import Quill from 'quill';
 import ImageData from './ImageData';
-
 interface IImageDropAndPasteOption {
   handler?: (dataUrl: string | ArrayBuffer, type?: string, imageData?: ImageData) => void;
 }
@@ -32,6 +31,7 @@ abstract class QuillImageDropAndPaste {
     e: ClipboardEvent | DragEvent,
   );
   protected abstract insert(content: string, type: string);
+  protected abstract getIndex();
 }
 
 class ImageDropAndPaste extends QuillImageDropAndPaste {
@@ -131,15 +131,20 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
       const blob = file.getAsFile ? file.getAsFile() : file;
       if (blob instanceof Blob) reader.readAsDataURL(blob);
     } else if (type.match(/^text\/plain$/i)) {
-      e.preventDefault();
       file.getAsString((s) => {
+        // Don't preventDefault here, because there might be clipboard matchers need to be triggered
+        // see https://github.com/chenjuneking/quill-image-drop-and-paste/issues/37
+        const i = this.getIndex();
         utils
           .urlIsImage(s)
           .then(() => {
+            // If the pasted plain text is an image, delete the pasted text and insert the image
+            const j = this.getIndex();
+            this.quill.deleteText(i, j - i, 'user');
             that.insert(s, 'image');
           })
           .catch(() => {
-            that.insert(s, 'text');
+            // Otherwise, do nothing
           });
       });
     }
@@ -168,8 +173,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
   /* insert into the editor
    */
   insert(content: string, type: string): void {
-    let index: number | undefined = (this.quill.getSelection(true) || {}).index;
-    if (index === undefined || index < 0) index = this.quill.getLength();
+    const index = this.getIndex();
     let _index: any;
     if (type === 'image') {
       _index = index + 1;
@@ -181,6 +185,12 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
     setTimeout(() => {
       this.quill.setSelection(_index);
     });
+  }
+
+  getIndex(): number {
+    let index: number | undefined = (this.quill.getSelection(true) || {}).index;
+    if (index === undefined || index < 0) index = this.quill.getLength();
+    return index;
   }
 }
 

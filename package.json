@@ -1,6 +1,6 @@
 {
   "name": "quill-image-drop-and-paste",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "description": "A quill editor module for drop and paste image, with a callback hook before insert image into the editor",
   "main": "dist/quill-image-drop-and-paste.cjs.js",
   "module": "dist/quill-image-drop-and-paste.esm.js",

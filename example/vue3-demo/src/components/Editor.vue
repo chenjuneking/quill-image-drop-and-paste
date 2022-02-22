@@ -25,6 +25,8 @@
 import { defineComponent, ref, reactive, onMounted } from 'vue'
 import Quill from 'quill'
 import QuillImageDropAndPaste, { ImageData } from 'quill-image-drop-and-paste'
+
+const Delta = Quill.import('delta')
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 
 export default defineComponent({
@@ -38,6 +40,14 @@ export default defineComponent({
       blob: null, // image's BLOB object
       file: null, // image's File object
     })
+
+    const isUrl = (str) => {
+      try {
+        return Boolean(new URL(str))
+      } catch (e) {
+        return false
+      }
+    }
 
     const imageHandler = (dataUrl, type, imageData) => {
       imageData.minify({
@@ -59,18 +69,31 @@ export default defineComponent({
       })
     }
 
+    const textPasteHander = (text) => {
+      return isUrl(text)
+        ? new Delta().insert(text, { link: text })
+        : new Delta().insert(text)
+    }
+
     onMounted(() => {
       quill.value = new Quill('#editor-container', {
         modules: {
           toolbar: [['bold', 'italic'], ['link', 'image']],
           imageDropAndPaste: {
             handler: imageHandler
+          },
+          clipboard: {
+            matchers: [
+              // your custom paste handler
+              [Node.TEXT_NODE, (node, delta) => textPasteHander(node.data, delta)],
+            ]
           }
         },
         placeholder: 'Copy & paste, or drag an image here...',
         readOnly: false,
         theme: 'snow'
       })
+
       quill.value
         .getModule('toolbar')
         .addHandler('image', function (clicked) {
