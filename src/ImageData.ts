@@ -69,7 +69,7 @@ class ImageData extends QuillImageData {
           });
         }
       };
-      image.src = utils.resolveDataUrl(this.dataUrl);
+      image.src = utils.resolveDataUrl(this.dataUrl, this.type);
     });
   }
 
@@ -87,7 +87,7 @@ class ImageData extends QuillImageData {
   /* convert dataURL to blob
    */
   public toBlob(): Blob {
-    const base64 = utils.resolveDataUrl(this.dataUrl).replace(/^[^,]+,/, '');
+    const base64 = utils.resolveDataUrl(this.dataUrl, this.type).replace(/^[^,]+,/, '');
     const buff = utils.binaryStringToArrayBuffer(atob(base64));
     return this.createBlob([buff], { type: this.type });
   }
@@ -99,7 +99,7 @@ class ImageData extends QuillImageData {
     if (typeof properties === 'string') properties = { type: properties };
     try {
       return new Blob(parts, properties);
-    } catch (e) {
+    } catch (e: any) {
       if (e.name !== 'TypeError') throw e;
       const Builder =
         'BlobBuilder' in window

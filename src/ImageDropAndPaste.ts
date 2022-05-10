@@ -68,7 +68,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
           if (typeof this.option.handler === 'function') {
             this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type, name));
           } else {
-            this.insert.call(this, utils.resolveDataUrl(dataUrl), type);
+            this.insert.call(this, utils.resolveDataUrl(dataUrl, type), type);
           }
         },
         e,
@@ -87,7 +87,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
           if (typeof this.option.handler === 'function') {
             this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type));
           } else {
-            this.insert(utils.resolveDataUrl(dataUrl), 'image');
+            this.insert(utils.resolveDataUrl(dataUrl, type), 'image');
           }
         },
         e,

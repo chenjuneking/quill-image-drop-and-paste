@@ -56,13 +56,13 @@ var utils = {
     },
     /* resolve dataUrl to base64 string
      */
-    resolveDataUrl(dataUrl) {
+    resolveDataUrl(dataUrl, type) {
         let str = '';
         if (typeof dataUrl === 'string') {
             str = dataUrl;
         }
         else if (dataUrl instanceof ArrayBuffer) {
-            str = this.arrayBufferToBase64Url(dataUrl);
+            str = this.arrayBufferToBase64Url(dataUrl, type);
         }
         return str;
     },
@@ -79,8 +79,9 @@ var utils = {
     },
     /* generate base64 string from array buffer
      */
-    arrayBufferToBase64Url(arrayBuffer) {
-        return btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+    arrayBufferToBase64Url(arrayBuffer, type) {
+        return (`data:${type};base64,` +
+            btoa(new Uint8Array(arrayBuffer).reduce((acc, byte) => acc + String.fromCharCode(byte), '')));
     },
     /* copy text - make text store in the clipboard
      */
@@ -184,7 +185,7 @@ class ImageData extends QuillImageData {
                     });
                 }
             };
-            image.src = utils.resolveDataUrl(this.dataUrl);
+            image.src = utils.resolveDataUrl(this.dataUrl, this.type);
         });
     }
     /* convert blob to file
@@ -200,7 +201,7 @@ class ImageData extends QuillImageData {
     /* convert dataURL to blob
      */
     toBlob() {
-        const base64 = utils.resolveDataUrl(this.dataUrl).replace(/^[^,]+,/, '');
+        const base64 = utils.resolveDataUrl(this.dataUrl, this.type).replace(/^[^,]+,/, '');
         const buff = utils.binaryStringToArrayBuffer(atob(base64));
         return this.createBlob([buff], { type: this.type });
     }
@@ -271,7 +272,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
                     this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type, name));
                 }
                 else {
-                    this.insert.call(this, utils.resolveDataUrl(dataUrl), type);
+                    this.insert.call(this, utils.resolveDataUrl(dataUrl, type), type);
                 }
             }, e);
         }
@@ -287,7 +288,7 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
                     this.option.handler.call(this, dataUrl, type, new ImageData(dataUrl, type));
                 }
                 else {
-                    this.insert(utils.resolveDataUrl(dataUrl), 'image');
+                    this.insert(utils.resolveDataUrl(dataUrl, type), 'image');
                 }
             }, e);
         }

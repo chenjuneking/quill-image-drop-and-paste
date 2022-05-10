@@ -53,12 +53,12 @@ export default {
   },
   /* resolve dataUrl to base64 string
    */
-  resolveDataUrl(dataUrl: string | ArrayBuffer): string {
+  resolveDataUrl(dataUrl: string | ArrayBuffer, type: string): string {
     let str = '';
     if (typeof dataUrl === 'string') {
       str = dataUrl;
     } else if (dataUrl instanceof ArrayBuffer) {
-      str = this.arrayBufferToBase64Url(dataUrl);
+      str = this.arrayBufferToBase64Url(dataUrl, type);
     }
     return str;
   },
@@ -74,8 +74,11 @@ export default {
   },
   /* generate base64 string from array buffer
    */
-  arrayBufferToBase64Url(arrayBuffer: ArrayBuffer): string {
-    return btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+  arrayBufferToBase64Url(arrayBuffer: ArrayBuffer, type: string): string {
+    return (
+      `data:${type};base64,` +
+      btoa(new Uint8Array(arrayBuffer).reduce((acc: string, byte: number) => acc + String.fromCharCode(byte), ''))
+    );
   },
   /* copy text - make text store in the clipboard
    */
