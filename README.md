@@ -100,6 +100,7 @@ Additional, you could rewrite the toolbar's insert image button with our image h
 
 ```javascript
 import { ImageData } from 'quill-image-drop-and-paste'
+
 quill.getModule('toolbar').addHandler('image', function(clicked) {
   if (clicked) {
     let fileInput = this.container.querySelector('input.ql-image[type=file]')
@@ -129,6 +130,8 @@ quill.getModule('toolbar').addHandler('image', function(clicked) {
   }
 })
 ```
+
+> ⚠️ **Can be confused**: `ImageData` from `quill-image-drop-and-paste` is different from [ImageData](https://developer.mozilla.org/en-US/docs/Web/API/ImageData/ImageData) in the Web API.
 
 ### Script Tag
 
