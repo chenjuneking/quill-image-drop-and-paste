@@ -53,8 +53,8 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
   /* handle image drop event
    */
   handleDrop(e: DragEvent): void {
-    e.preventDefault();
     if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+      e.preventDefault();
       if (document.caretRangeFromPoint) {
         const selection = document.getSelection();
         const range = document.caretRangeFromPoint(e.clientX, e.clientY);
