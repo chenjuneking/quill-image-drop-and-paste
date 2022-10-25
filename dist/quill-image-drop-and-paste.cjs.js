@@ -107,6 +107,7 @@ var utils = {
         let isSuccess = false;
         try {
             isSuccess = document.execCommand('copy');
+            // eslint-disable-next-line no-empty
         }
         catch (_a) { }
         element.remove();
@@ -201,7 +202,9 @@ class ImageData extends QuillImageData {
     /* convert dataURL to blob
      */
     toBlob() {
-        const base64 = utils.resolveDataUrl(this.dataUrl, this.type).replace(/^[^,]+,/, '');
+        const base64 = utils
+            .resolveDataUrl(this.dataUrl, this.type)
+            .replace(/^[^,]+,/, '');
         const buff = utils.binaryStringToArrayBuffer(atob(base64));
         return this.createBlob([buff], { type: this.type });
     }
@@ -280,7 +283,10 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
     /* handle image paste event
      */
     handlePaste(e) {
-        if (e.clipboardData && e.clipboardData.items && e.clipboardData.items.length) {
+        console.log('paste', e);
+        if (e.clipboardData &&
+            e.clipboardData.items &&
+            e.clipboardData.items.length) {
             if (utils.isRichText(e.clipboardData.items))
                 return;
             this.readFiles(e.clipboardData.items, (dataUrl, type = 'image/png') => {

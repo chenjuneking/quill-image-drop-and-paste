@@ -108,6 +108,7 @@ var QuillImageDropAndPaste = (function (exports) {
           let isSuccess = false;
           try {
               isSuccess = document.execCommand('copy');
+              // eslint-disable-next-line no-empty
           }
           catch (_a) { }
           element.remove();
@@ -202,7 +203,9 @@ var QuillImageDropAndPaste = (function (exports) {
       /* convert dataURL to blob
        */
       toBlob() {
-          const base64 = utils.resolveDataUrl(this.dataUrl, this.type).replace(/^[^,]+,/, '');
+          const base64 = utils
+              .resolveDataUrl(this.dataUrl, this.type)
+              .replace(/^[^,]+,/, '');
           const buff = utils.binaryStringToArrayBuffer(atob(base64));
           return this.createBlob([buff], { type: this.type });
       }
@@ -281,7 +284,10 @@ var QuillImageDropAndPaste = (function (exports) {
       /* handle image paste event
        */
       handlePaste(e) {
-          if (e.clipboardData && e.clipboardData.items && e.clipboardData.items.length) {
+          console.log('paste', e);
+          if (e.clipboardData &&
+              e.clipboardData.items &&
+              e.clipboardData.items.length) {
               if (utils.isRichText(e.clipboardData.items))
                   return;
               this.readFiles(e.clipboardData.items, (dataUrl, type = 'image/png') => {
@@ -388,10 +394,10 @@ var QuillImageDropAndPaste = (function (exports) {
   }
 
   exports.ImageData = ImageData;
-  exports['default'] = ImageDropAndPaste;
+  exports["default"] = ImageDropAndPaste;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
   return exports;
 
-}({}));
+})({});

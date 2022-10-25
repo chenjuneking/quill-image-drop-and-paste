@@ -1,9 +1,9 @@
-import path from 'path';
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from 'rollup-plugin-typescript2';
-import { terser } from 'rollup-plugin-terser';
-import pkg from './package.json';
+import path from 'path'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import typescript from 'rollup-plugin-typescript2'
+import { terser } from 'rollup-plugin-terser'
+import pkg from './package.json'
 
 const ts = typescript({
   tsconfig: 'tsconfig.json',
@@ -12,8 +12,8 @@ const ts = typescript({
     include: ['src/**/*.ts'],
     exclude: ['node_modules', 'dist', 'cypress', 'tests'],
   },
-});
-const plugins = [ts, resolve(), commonjs()];
+})
+const plugins = [ts, resolve(), commonjs()]
 
 const esm = {
   input: path.join(__dirname, './src/index.esm.ts'),
@@ -22,7 +22,7 @@ const esm = {
     format: 'esm',
   },
   plugins,
-};
+}
 
 const ssr = {
   input: path.join(__dirname, './src/index.cjs.ts'),
@@ -33,7 +33,7 @@ const ssr = {
     // name: 'ImageDropAndPaste',
   },
   plugins,
-};
+}
 
 const iife = {
   input: path.join(__dirname, './src/index.esm.ts'),
@@ -44,19 +44,25 @@ const iife = {
     format: 'iife',
   },
   plugins,
-};
+}
 
 function generateConfig(config, withTerser = true) {
   const minConfig = {
     ...config,
-  };
+  }
   minConfig.output = {
     ...config.output,
-    file: withTerser ? config.output.file.replace(/\.js$/i, '.min.js') : config.output.file,
+    file: withTerser
+      ? config.output.file.replace(/\.js$/i, '.min.js')
+      : config.output.file,
     sourcemap: withTerser,
-  };
-  minConfig.plugins = [...config.plugins, ...(withTerser ? [terser()] : [])];
-  return [config, minConfig];
+  }
+  minConfig.plugins = [...config.plugins, ...(withTerser ? [terser()] : [])]
+  return [config, minConfig]
 }
 
-export default [...generateConfig(esm), ...generateConfig(ssr), ...generateConfig(iife)];
+export default [
+  ...generateConfig(esm),
+  ...generateConfig(ssr),
+  ...generateConfig(iife),
+]

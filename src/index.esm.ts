@@ -1,4 +1,4 @@
-import ImageData from './ImageData';
-import ImageDropAndPaste from './ImageDropAndPaste';
+import ImageData from './ImageData'
+import ImageDropAndPaste from './ImageDropAndPaste'
 
-export { ImageData, ImageDropAndPaste as default };
+export { ImageData, ImageDropAndPaste as default }

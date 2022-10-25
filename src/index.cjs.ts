@@ -1,2 +1,2 @@
-import ImageDropAndPaste from './ImageDropAndPaste';
-export default ImageDropAndPaste;
+import ImageDropAndPaste from './ImageDropAndPaste'
+export default ImageDropAndPaste

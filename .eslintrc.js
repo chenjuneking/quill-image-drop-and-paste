@@ -1,14 +1,16 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2020,
+    parser: '@typescript-eslint/parser',
     sourceType: 'module',
   },
-  extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended', 'plugin:cypress/recommended'],
+  extends: ['eslint:recommended', 'prettier', 'plugin:cypress/recommended'],
   rules: {
+    'no-undef': 'off',
+    'no-unused-vars': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-this-alias': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
-  plugins: ['cypress'],
-};
+  plugins: ['@typescript-eslint', 'cypress'],
+}
