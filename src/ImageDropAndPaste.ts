@@ -93,7 +93,6 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
   /* handle image paste event
    */
   handlePaste(e: ClipboardEvent): void {
-    console.log('paste', e)
     if (
       e.clipboardData &&
       e.clipboardData.items &&
@@ -166,17 +165,29 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
       file.getAsString((s) => {
         // Don't preventDefault here, because there might be clipboard matchers need to be triggered
         // see https://github.com/chenjuneking/quill-image-drop-and-paste/issues/37
+        this.quill.disable()
         const i = this.getIndex()
         utils
           .urlIsImage(s)
           .then(() => {
-            // If the pasted plain text is an image, delete the pasted text and insert the image
-            const j = this.getIndex()
-            this.quill.deleteText(i, j - i, 'user')
-            that.insert(s, 'image')
+            // The pasted plain text is an image
+            if (utils.urlIsImageDataUrl(s)) {
+              // If the url is a dataUrl, just fire the callback
+              const matched = s.match(/^data:(image\/\w+);base64,/)
+              const t = matched ? matched[1] : 'image/png'
+              callback(s, t)
+              this.quill.enable()
+              this.quill.setSelection(i as any)
+            } else {
+              // If the url isn't a dataUrl, just insert into the editor
+              setTimeout(() => {
+                this.quill.enable()
+                that.insert(s, 'image', i)
+              })
+            }
           })
           .catch(() => {
-            // Otherwise, do nothing
+            this.quill.enable()
           })
       })
     }
@@ -208,8 +219,8 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
 
   /* insert into the editor
    */
-  insert(content: string, type: string): void {
-    const index = this.getIndex()
+  insert(content: string, type: string, index?: number): void {
+    index = index === undefined ? this.getIndex() : index
     let _index: any
     if (type === 'image') {
       _index = index + 1

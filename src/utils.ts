@@ -34,6 +34,9 @@ export default {
       img.src = url
     })
   },
+  urlIsImageDataUrl(url: string): boolean {
+    return /^data:image\/\w+;base64,/.test(url)
+  },
   /* check string is a valid url
    */
   validURL(str: string): boolean {
@@ -46,13 +49,18 @@ export default {
   /* check the giving string is a html text
    */
   isRichText(clipboardDataItems: DataTransferItemList): boolean {
-    let isHtml = false
+    let hasHtml = false
+    let hasImage = false
     Array.prototype.forEach.call(clipboardDataItems, (item) => {
-      if (item.type.match(/^text\/html$/i)) {
-        isHtml = true
+      console.log(item.kind, item.type)
+      if (item.kind === 'string' && item.type.match(/^text\/html$/i)) {
+        hasHtml = true
+      }
+      if (item.kind === 'file' && item.type.match(/^image\/\w+$/i)) {
+        hasImage = true
       }
     })
-    return isHtml
+    return hasHtml && !hasImage
   },
   /* resolve dataUrl to base64 string
    */

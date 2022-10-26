@@ -31,6 +31,9 @@ var utils = {
             img.src = url;
         });
     },
+    urlIsImageDataUrl(url) {
+        return /^data:image\/\w+;base64,/.test(url);
+    },
     /* check string is a valid url
      */
     validURL(str) {
@@ -44,13 +47,18 @@ var utils = {
     /* check the giving string is a html text
      */
     isRichText(clipboardDataItems) {
-        let isHtml = false;
+        let hasHtml = false;
+        let hasImage = false;
         Array.prototype.forEach.call(clipboardDataItems, (item) => {
-            if (item.type.match(/^text\/html$/i)) {
-                isHtml = true;
+            console.log(item.kind, item.type);
+            if (item.kind === 'string' && item.type.match(/^text\/html$/i)) {
+                hasHtml = true;
+            }
+            if (item.kind === 'file' && item.type.match(/^image\/\w+$/i)) {
+                hasImage = true;
             }
         });
-        return isHtml;
+        return hasHtml && !hasImage;
     },
     /* resolve dataUrl to base64 string
      */
@@ -281,7 +289,6 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
     /* handle image paste event
      */
     handlePaste(e) {
-        console.log('paste', e);
         if (e.clipboardData &&
             e.clipboardData.items &&
             e.clipboardData.items.length) {
@@ -330,17 +337,30 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
             file.getAsString((s) => {
                 // Don't preventDefault here, because there might be clipboard matchers need to be triggered
                 // see https://github.com/chenjuneking/quill-image-drop-and-paste/issues/37
+                this.quill.disable();
                 const i = this.getIndex();
                 utils
                     .urlIsImage(s)
                     .then(() => {
-                    // If the pasted plain text is an image, delete the pasted text and insert the image
-                    const j = this.getIndex();
-                    this.quill.deleteText(i, j - i, 'user');
-                    that.insert(s, 'image');
+                    // The pasted plain text is an image
+                    if (utils.urlIsImageDataUrl(s)) {
+                        // If the url is a dataUrl, just fire the callback
+                        const matched = s.match(/^data:(image\/\w+);base64,/);
+                        const t = matched ? matched[1] : 'image/png';
+                        callback(s, t);
+                        this.quill.enable();
+                        this.quill.setSelection(i);
+                    }
+                    else {
+                        // If the url isn't a dataUrl, just insert into the editor
+                        setTimeout(() => {
+                            this.quill.enable();
+                            that.insert(s, 'image', i);
+                        });
+                    }
                 })
                     .catch(() => {
-                    // Otherwise, do nothing
+                    this.quill.enable();
                 });
             });
         }
@@ -362,8 +382,8 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
     }
     /* insert into the editor
      */
-    insert(content, type) {
-        const index = this.getIndex();
+    insert(content, type, index) {
+        index = index === undefined ? this.getIndex() : index;
         let _index;
         if (type === 'image') {
             _index = index + 1;
