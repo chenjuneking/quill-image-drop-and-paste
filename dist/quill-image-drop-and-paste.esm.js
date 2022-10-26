@@ -50,7 +50,6 @@ var utils = {
         let hasHtml = false;
         let hasImage = false;
         Array.prototype.forEach.call(clipboardDataItems, (item) => {
-            console.log(item.kind, item.type);
             if (item.kind === 'string' && item.type.match(/^text\/html$/i)) {
                 hasHtml = true;
             }
