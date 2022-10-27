@@ -294,6 +294,7 @@ var QuillImageDropAndPaste = (function (exports) {
           if (e.clipboardData &&
               e.clipboardData.items &&
               e.clipboardData.items.length) {
+              console.log('isRichText', utils.isRichText(e.clipboardData.items));
               if (utils.isRichText(e.clipboardData.items))
                   return;
               this.readFiles(e.clipboardData.items, (dataUrl, type = 'image/png') => {
@@ -339,7 +340,6 @@ var QuillImageDropAndPaste = (function (exports) {
               file.getAsString((s) => {
                   // Don't preventDefault here, because there might be clipboard matchers need to be triggered
                   // see https://github.com/chenjuneking/quill-image-drop-and-paste/issues/37
-                  this.quill.disable();
                   const i = this.getIndex();
                   utils
                       .urlIsImage(s)
@@ -350,19 +350,19 @@ var QuillImageDropAndPaste = (function (exports) {
                           const matched = s.match(/^data:(image\/\w+);base64,/);
                           const t = matched ? matched[1] : 'image/png';
                           callback(s, t);
-                          this.quill.enable();
+                          this.quill.deleteText(i, s.length, 'user');
                           this.quill.setSelection(i);
                       }
                       else {
-                          // If the url isn't a dataUrl, just insert into the editor
+                          // If the url isn't a dataUrl, delete the pasted text and insert the image
                           setTimeout(() => {
-                              this.quill.enable();
+                              this.quill.deleteText(i, s.length, 'user');
                               that.insert(s, 'image', i);
                           });
                       }
                   })
                       .catch(() => {
-                      this.quill.enable();
+                      // Otherwise, do nothing
                   });
               });
           }
