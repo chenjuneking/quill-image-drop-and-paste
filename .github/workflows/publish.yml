@@ -12,12 +12,12 @@ jobs:
       - name: Install node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 18
+          node-version: 14
       - name: Check out the repository
         uses: actions/checkout@v2
       - name: Install node modules
         run: |
-          npm i -g pnpm
+          npm i -g pnpm@7
           pnpm install
       - name: Build
         run: pnpm build
