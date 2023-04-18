@@ -3,7 +3,7 @@ name: publish
 on:
   push:
     tags:
-    - "v*"
+      - 'v*'
 
 jobs:
   publish:
@@ -12,7 +12,7 @@ jobs:
       - name: Install node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 18
       - name: Check out the repository
         uses: actions/checkout@v2
       - name: Install node modules
