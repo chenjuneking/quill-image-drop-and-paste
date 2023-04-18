@@ -258,6 +258,8 @@ var QuillImageDropAndPaste = (function (exports) {
   class ImageDropAndPaste extends QuillImageDropAndPaste {
       constructor(quill, option) {
           super(quill, option);
+          if (typeof option.autoConvert !== 'boolean')
+              option.autoConvert = true;
           this.quill = quill;
           this.option = option;
           this.handleDrop = this.handleDrop.bind(this);
@@ -294,7 +296,6 @@ var QuillImageDropAndPaste = (function (exports) {
           if (e.clipboardData &&
               e.clipboardData.items &&
               e.clipboardData.items.length) {
-              console.log('isRichText', utils.isRichText(e.clipboardData.items));
               if (utils.isRichText(e.clipboardData.items))
                   return;
               this.readFiles(e.clipboardData.items, (dataUrl, type = 'image/png') => {
@@ -341,29 +342,30 @@ var QuillImageDropAndPaste = (function (exports) {
                   // Don't preventDefault here, because there might be clipboard matchers need to be triggered
                   // see https://github.com/chenjuneking/quill-image-drop-and-paste/issues/37
                   const i = this.getIndex();
-                  utils
-                      .urlIsImage(s)
-                      .then(() => {
-                      // The pasted plain text is an image
-                      if (utils.urlIsImageDataUrl(s)) {
-                          // If the url is a dataUrl, just fire the callback
-                          const matched = s.match(/^data:(image\/\w+);base64,/);
-                          const t = matched ? matched[1] : 'image/png';
-                          callback(s, t);
-                          this.quill.deleteText(i, s.length, 'user');
-                          this.quill.setSelection(i);
-                      }
-                      else {
-                          // If the url isn't a dataUrl, delete the pasted text and insert the image
-                          setTimeout(() => {
-                              this.quill.deleteText(i, s.length, 'user');
-                              that.insert(s, 'image', i);
+                  if (utils.urlIsImageDataUrl(s)) {
+                      // If the url is a dataUrl, just fire the callback
+                      const matched = s.match(/^data:(image\/\w+);base64,/);
+                      const t = matched ? matched[1] : 'image/png';
+                      callback(s, t);
+                      this.quill.deleteText(i, s.length, 'user');
+                      this.quill.setSelection(i);
+                  }
+                  else {
+                      if (this.option.autoConvert) {
+                          utils
+                              .urlIsImage(s)
+                              .then(() => {
+                              // If the url isn't a dataUrl, delete the pasted text and insert the image
+                              setTimeout(() => {
+                                  this.quill.deleteText(i, s.length, 'user');
+                                  that.insert(s, 'image', i);
+                              });
+                          })
+                              .catch(() => {
+                              // Otherwise, do nothing
                           });
                       }
-                  })
-                      .catch(() => {
-                      // Otherwise, do nothing
-                  });
+                  }
               });
           }
       }

@@ -41,20 +41,24 @@
  *   payload: {hello: 'yolo'},
  * });
  */
-Cypress.Commands.add('paste', { prevSubject: true }, function (subject, pasteOptions) {
-  const { payload, type } = pasteOptions;
-  const data = type === 'application/json' ? JSON.stringify(payload) : payload;
-  // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer
-  const clipboardData = new DataTransfer();
-  clipboardData.setData(type, data);
-  // https://developer.mozilla.org/en-US/docs/Web/API/Element/paste_event
-  const pasteEvent = new ClipboardEvent('paste', {
-    bubbles: true,
-    cancelable: true,
-    // type: type,
-    // data,
-    clipboardData,
-  });
-  subject[0].dispatchEvent(pasteEvent);
-  return subject;
-});
+Cypress.Commands.add(
+  'paste',
+  { prevSubject: true },
+  function (subject, pasteOptions) {
+    const { payload, type } = pasteOptions
+    const data = type === 'application/json' ? JSON.stringify(payload) : payload
+    // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer
+    const clipboardData = new DataTransfer()
+    clipboardData.setData(type, data)
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/paste_event
+    const pasteEvent = new ClipboardEvent('paste', {
+      bubbles: true,
+      cancelable: true,
+      // type: type,
+      // data,
+      clipboardData,
+    })
+    subject[0].dispatchEvent(pasteEvent)
+    return subject
+  }
+)

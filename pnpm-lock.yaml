@@ -23,6 +23,7 @@ specifiers:
   rollup-plugin-terser: ^7.0.2
   rollup-plugin-typescript2: ^0.34.1
   ts-jest: ^27.0.4
+  tslib: ^2.5.0
   typescript: ^4.3.5
 
 devDependencies:
@@ -48,6 +49,7 @@ devDependencies:
   rollup-plugin-terser: 7.0.2_rollup@2.79.1
   rollup-plugin-typescript2: 0.34.1_gypgyaqhine6mwjfvh7icfhviq
   ts-jest: 27.1.5_h2mjkler2cwtrz56xjx3qgassu
+  tslib: 2.5.0
   typescript: 4.8.4
 
 packages:
@@ -4290,7 +4292,7 @@ packages:
       fs-extra: 10.1.0
       rollup: 2.79.1
       semver: 7.3.8
-      tslib: 2.4.0
+      tslib: 2.5.0
       typescript: 4.8.4
     dev: true
 
@@ -4311,7 +4313,7 @@ packages:
   /rxjs/7.5.7:
     resolution: {integrity: sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==}
     dependencies:
-      tslib: 2.4.0
+      tslib: 2.5.0
     dev: true
 
   /safe-buffer/5.2.1:
@@ -4718,8 +4720,8 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
 
-  /tslib/2.4.0:
-    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+  /tslib/2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
     dev: true
 
   /tsutils/3.21.0_typescript@4.8.4:
