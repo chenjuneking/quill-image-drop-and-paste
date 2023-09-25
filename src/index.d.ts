@@ -8,6 +8,7 @@ export interface IImageDataMinifyOption {
 
 declare module 'quill-image-drop-and-paste' {
   export class ImageData {
+    constructor(dataUrl: string | ArrayBuffer, type: string, name?: string)
     dataUrl: string | ArrayBuffer
     type: string
     minify(
