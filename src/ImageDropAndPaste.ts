@@ -50,7 +50,11 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
     if (typeof option.autoConvert !== 'boolean') option.autoConvert = true
     if (option.enableNativeUploader !== true) {
       // @ts-ignore
-      quill.uploader.options.handler = () => {}
+      utils.isObject(quill.uploader) &&
+        // @ts-ignore
+        utils.isObject(quill.uploader?.options) &&
+        // @ts-ignore
+        (quill.uploader.options.handler = () => {})
     }
     this.quill = quill
     this.option = option
@@ -172,11 +176,11 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
       file.getAsString((s) => {
         // Don't preventDefault here, because there might be clipboard matchers need to be triggered
         // see https://github.com/chenjuneking/quill-image-drop-and-paste/issues/37
-        const i = this.getIndex()
         if (utils.urlIsImageDataUrl(s)) {
           // If the url is a dataUrl, just fire the callback
           const matched = s.match(/^data:(image\/\w+);base64,/)
           const t = matched ? matched[1] : 'image/png'
+          const i = this.getIndex()
           callback(s, t)
           this.quill.deleteText(i, s.length, 'user')
           this.quill.setSelection(i as any)
@@ -187,8 +191,9 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
               .then(() => {
                 // If the url isn't a dataUrl, delete the pasted text and insert the image
                 setTimeout(() => {
-                  this.quill.deleteText(i, s.length, 'user')
-                  that.insert(s, 'image', i)
+                  const i = this.getIndex()
+                  this.quill.deleteText(i - s.length, s.length, 'user')
+                  that.insert(s, 'image', i - s.length)
                 })
               })
               .catch(() => {

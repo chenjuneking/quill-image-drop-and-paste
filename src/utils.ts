@@ -137,4 +137,9 @@ export default {
   isType(target: any, type: string): boolean {
     return Object.prototype.toString.call(target) === `[object ${type}]`
   },
+  /** check the target whether is object
+   */
+  isObject(target: any): boolean {
+    return this.isType(target, 'Object')
+  },
 }

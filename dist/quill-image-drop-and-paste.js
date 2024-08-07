@@ -134,6 +134,11 @@ var QuillImageDropAndPaste = (function (exports) {
       isType(target, type) {
           return Object.prototype.toString.call(target) === `[object ${type}]`;
       },
+      /** check the target whether is object
+       */
+      isObject(target) {
+          return this.isType(target, 'Object');
+      },
   };
 
   class QuillImageData {
@@ -257,12 +262,17 @@ var QuillImageDropAndPaste = (function (exports) {
   }
   class ImageDropAndPaste extends QuillImageDropAndPaste {
       constructor(quill, option) {
+          var _a;
           super(quill, option);
           if (typeof option.autoConvert !== 'boolean')
               option.autoConvert = true;
           if (option.enableNativeUploader !== true) {
               // @ts-ignore
-              quill.uploader.options.handler = () => { };
+              utils.isObject(quill.uploader) &&
+                  // @ts-ignore
+                  utils.isObject((_a = quill.uploader) === null || _a === void 0 ? void 0 : _a.options) &&
+                  // @ts-ignore
+                  (quill.uploader.options.handler = () => { });
           }
           this.quill = quill;
           this.option = option;
@@ -345,11 +355,11 @@ var QuillImageDropAndPaste = (function (exports) {
               file.getAsString((s) => {
                   // Don't preventDefault here, because there might be clipboard matchers need to be triggered
                   // see https://github.com/chenjuneking/quill-image-drop-and-paste/issues/37
-                  const i = this.getIndex();
                   if (utils.urlIsImageDataUrl(s)) {
                       // If the url is a dataUrl, just fire the callback
                       const matched = s.match(/^data:(image\/\w+);base64,/);
                       const t = matched ? matched[1] : 'image/png';
+                      const i = this.getIndex();
                       callback(s, t);
                       this.quill.deleteText(i, s.length, 'user');
                       this.quill.setSelection(i);
@@ -361,8 +371,9 @@ var QuillImageDropAndPaste = (function (exports) {
                               .then(() => {
                               // If the url isn't a dataUrl, delete the pasted text and insert the image
                               setTimeout(() => {
-                                  this.quill.deleteText(i, s.length, 'user');
-                                  that.insert(s, 'image', i);
+                                  const i = this.getIndex();
+                                  this.quill.deleteText(i - s.length, s.length, 'user');
+                                  that.insert(s, 'image', i - s.length);
                               });
                           })
                               .catch(() => {
