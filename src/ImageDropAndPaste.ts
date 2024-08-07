@@ -224,10 +224,10 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
   insert(content: string, type: string, index?: number): void {
     index = index === undefined ? this.getIndex() : index
     let _index: any
-    if (type === 'image') {
+    if (type.startsWith('image')) {
       _index = index + 1
-      this.quill.insertEmbed(index, type, content, 'user')
-    } else if (type === 'text') {
+      this.quill.insertEmbed(index, 'image', content, 'user')
+    } else if (type.startsWith('text')) {
       _index = index + content.length
       this.quill.insertText(index, content, 'user')
     }
