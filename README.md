@@ -164,13 +164,17 @@ const QuillImageData = QuillImageDropAndPaste.ImageData
 
 ### Finally
 
-If you didnot config a image handler, it will insert the image with dataURL into the quill editor directory after your drop/paste.
+If you did not config a image handler, it will insert the image with dataURL into the quill editor directory after your drop/paste.
 
 ### Options
 
 #### `autoConvert`
 
 Automatic insert the image to the editor while the pasted content is an image's url(plain text). Default `true`.
+
+#### `enableNativeUploader`
+
+Whether enable Quill's original uploader. Default `false`.
 
 #### `handler`
 

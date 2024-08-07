@@ -259,6 +259,10 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
         super(quill, option);
         if (typeof option.autoConvert !== 'boolean')
             option.autoConvert = true;
+        if (option.enableNativeUploader !== true) {
+            // @ts-ignore
+            quill.uploader.options.handler = () => { };
+        }
         this.quill = quill;
         this.option = option;
         this.handleDrop = this.handleDrop.bind(this);
@@ -388,11 +392,11 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
     insert(content, type, index) {
         index = index === undefined ? this.getIndex() : index;
         let _index;
-        if (type === 'image') {
+        if (type.startsWith('image')) {
             _index = index + 1;
-            this.quill.insertEmbed(index, type, content, 'user');
+            this.quill.insertEmbed(index, 'image', content, 'user');
         }
-        else if (type === 'text') {
+        else if (type.startsWith('text')) {
             _index = index + content.length;
             this.quill.insertText(index, content, 'user');
         }

@@ -21,6 +21,8 @@ declare module 'quill-image-drop-and-paste' {
     static ImageData: ImageData
     public quill: Quill
     public option: {
+      autoConvert?: boolean
+      enableNativeUploader?: boolean
       handler?: (
         dataUrl: string | ArrayBuffer,
         type?: string,

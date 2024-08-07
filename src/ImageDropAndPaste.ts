@@ -3,6 +3,7 @@ import Quill from 'quill'
 import ImageData from './ImageData'
 interface IImageDropAndPasteOption {
   autoConvert?: boolean
+  enableNativeUploader?: boolean
   handler?: (
     dataUrl: string | ArrayBuffer,
     type?: string,
@@ -47,6 +48,10 @@ class ImageDropAndPaste extends QuillImageDropAndPaste {
   constructor(quill: Quill, option: IImageDropAndPasteOption) {
     super(quill, option)
     if (typeof option.autoConvert !== 'boolean') option.autoConvert = true
+    if (option.enableNativeUploader !== true) {
+      // @ts-ignore
+      quill.uploader.options.handler = () => {}
+    }
     this.quill = quill
     this.option = option
     this.handleDrop = this.handleDrop.bind(this)
